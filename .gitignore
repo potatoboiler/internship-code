@@ -1,2 +1,6 @@
 *.swp
 *.asv
+*.tif
+python-cropper-tk/
+ogcroptk.py
+tkinterplay.py
