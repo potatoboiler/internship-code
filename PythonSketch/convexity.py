@@ -1,10 +1,14 @@
 import os
 
 import cv2 as cv
+import matlab
+import matlab.engine
 import numpy as np
-from scipy import spatial
 from matplotlib import pyplot as plt
 from PIL import Image
+from scipy import spatial
+
+eng = matlab.engine.start_matlab()
 
 
 def load_image(infilename) -> np.ndarray:
@@ -51,13 +55,20 @@ def segments(p):  #
     return zip(p, p[1:] + [p[0]])
 
 
+def convMATLAB(binimg: np.ndarray):
+    return eng.computeconvex(matlab.uint16(np.ndarray.tolist(binimg)))
+
+
 def convexArea(binimg: np.ndarray) -> int:
     # print(arr2Pts(binimg))
-    convhull = spatial.ConvexHull(spatial.ConvexHull(np.array(arr2Pts(binimg))).points)
 
-    print((convhull.points), "len ")
+    convhull = spatial.ConvexHull(
+        spatial.ConvexHull(np.array(arr2Pts(binimg))).points)
+
+    # print((convhull.points), "len ")
     convarea = area(convhull.points)
 
+    """
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     for visible_facet in convhull.simplices[convhull.good]:
@@ -67,4 +78,5 @@ def convexArea(binimg: np.ndarray) -> int:
                 lw=6)
     spatial.convex_hull_plot_2d(convhull, ax=ax)
     plt.show()
+    """
     return convarea

@@ -1,3 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+photo_spliter.py - Provides a simple method to split a single image containing
+multiple images into individual files.
+Created by Greg Lavino
+03.16.2010
+Note the following packages are required:
+ python-tk
+ python-imaging
+ python-imaging-tk
+'''
 import os
 import sys
 import tkinter as tk
@@ -195,7 +207,7 @@ class Cropper(tk.Tk):
     def canvas_mouseup1_callback(self, event):
         self.croprect_end = (event.x, event.y)
         self.set_crop_area()
-        #print("END!")
+        # print("END!")
         self.canvas.delete(self.current_rect)
         self.current_rect = None
 
@@ -396,9 +408,11 @@ class Cropper(tk.Tk):
 
         self.displayimage()
 
+
 def main():
     root = Cropper()
     root.mainloop()
+
 
 if __name__ == '__main__':
     main()

@@ -35,10 +35,11 @@ with open(csvname, 'w', newline='') as csvfile:
             cv.imwrite(filepath, thresh)
             # thresh = nd array of binary image
 
-            #print(thresh)
+            # print(thresh)
             # write stats to csv
-            agg_area = conv.ptCount(thresh) 
-            print(agg_area)
-            conv_area = conv.convexArea(thresh)
-            print(conv_area)
+            agg_area = conv.ptCount(thresh)
+            print("projected area: ", agg_area)
+            conv_area = conv.convMATLAB(thresh)
+            print("convex area: ", conv_area)
+
             w2csv.writerow([filename, agg_area/conv_area, agg_area, conv_area])
