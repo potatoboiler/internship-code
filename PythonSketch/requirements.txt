@@ -1,0 +1,10 @@
+os
+sys
+tkinter
+pathlib
+#replace PIL with Pillow please
+PIL 
+scipy
+numpy
+matplotlib
+csv

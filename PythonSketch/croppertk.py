@@ -195,7 +195,7 @@ class Cropper(tk.Tk):
     def canvas_mouseup1_callback(self, event):
         self.croprect_end = (event.x, event.y)
         self.set_crop_area()
-        print("END!")
+        #print("END!")
         self.canvas.delete(self.current_rect)
         self.current_rect = None
 
@@ -234,18 +234,18 @@ class Cropper(tk.Tk):
 
         self.og_filename = os.path.splitext(self.filename.split('/')[-1])[0]
         self.newdir = os.path.join(
-            os.getcwd() + '\\crops_' + self.og_filename + '\\')
+            os.getcwd() + os.sep + 'crops_' + self.og_filename + os.sep)
         try:
             os.makedirs(self.newdir)
         except:
             pass
 
-        self.newdir = os.path.join(self.newdir + self.og_filename)
+        self.writedir = os.path.join(self.newdir + self.og_filename)
 
         for croparea in self.crop_rects:
             cropcount += 1
             f = self.newfilename(cropcount)
-            print(f, croparea)
+            #print(f, croparea)
             self.crop(croparea, f)
         self.quit()
 
@@ -297,9 +297,9 @@ class Cropper(tk.Tk):
         self.set_button_state()
 
     def newfilename(self, filenum):
-        print(self.filename)
+        # print(self.filename)
         e = os.path.splitext(self.filename)[1]
-        return '%s__crop__%s%s' % (self.newdir, filenum, e)
+        return '%s__crop__%s%s' % (self.writedir, filenum, e)
 
     #################
     ### countour ####
@@ -396,6 +396,9 @@ class Cropper(tk.Tk):
 
         self.displayimage()
 
+def main():
+    root = Cropper()
+    root.mainloop()
 
-root = Cropper()
-root.mainloop()
+if __name__ == '__main__':
+    main()
