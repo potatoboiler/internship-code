@@ -11,7 +11,11 @@ from scipy import spatial
 eng = matlab.engine.start_matlab()
 
 
+
 def load_image(infilename) -> np.ndarray:
+    """
+    load image into numpy array
+    """
     img = Image.open(infilename)
     img.load()
     data = np.asarray(img, dtype="int32")
@@ -19,6 +23,9 @@ def load_image(infilename) -> np.ndarray:
 
 
 def arr2Pts(arr: np.ndarray):
+    """
+    convert a matrix of binary pixels to a list of coordinates
+    """
     out = []
     for i in range(len(arr)):
         for j in range(len(arr[0])):
@@ -29,7 +36,7 @@ def arr2Pts(arr: np.ndarray):
 
 def ptCount(p: np.ndarray) -> int:
     """
-    to be used on raw binary image array
+    count the number of filled points in a matrix of binary pixels
     """
     area = 0
     for i in range(len(p)):
@@ -56,19 +63,22 @@ def segments(p):  #
 
 
 def convMATLAB(binimg: np.ndarray):
+    """
+    Calls MATLAB script to compute the convex hull and area
+    Argument of computeconvex is numpy matrix of pixels converted to a MATLAB array
+    """
     return eng.computeconvex(matlab.uint16(np.ndarray.tolist(binimg)))
 
 
 def convexArea(binimg: np.ndarray) -> int:
-    # print(arr2Pts(binimg))
+    """
+    DO NOT USE: Uses Python scipy and numpy arrays and functions to compute area of convex hull
+    """
 
-    convhull = spatial.ConvexHull(
-        spatial.ConvexHull(np.array(arr2Pts(binimg))).points)
-
-    # print((convhull.points), "len ")
+    convhull = spatial.ConvexHull(spatial.ConvexHull(np.array(arr2Pts(binimg))).points)
     convarea = area(convhull.points)
 
-    """
+    """ # plots the convex hull 
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     for visible_facet in convhull.simplices[convhull.good]:

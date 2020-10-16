@@ -3,6 +3,9 @@ thumboffset = 16
 
 
 class Rect(object):
+    """
+    Utility class for Cropper class, for marking cropped regions
+    """
     def __init__(self, *args):
         self.set_points(*args)
 

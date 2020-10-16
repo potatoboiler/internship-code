@@ -10,10 +10,14 @@ from croppertk import Cropper
 
 imgexts = ['jpg', 'tif', 'png', 'bmp']
 
+# creates UI object from which file is selected and crops are perfroemd 
 root = Cropper()
 root.mainloop()
+
+# directory where output images are stored
 crops = os.listdir(root.newdir)
 
+# get name of csv file to be generated
 csvname = root.og_filename + '_conv.csv'
 
 with open(csvname, 'w', newline='') as csvfile:
@@ -25,21 +29,19 @@ with open(csvname, 'w', newline='') as csvfile:
         if any(file.endswith(x) for x in imgexts):
             # read image from dir
             img = cv.imread(os.path.join(root.newdir, file), 0)
+            
+            # thresh = nd array of binary image, ret is not used
             ret, thresh = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
 
-            # write binary image to disk
+            # write binarized image to disk
             f, e = os.path.splitext(str(file))
             filename = f + '_bin' + e
-            #print('FILENAME ', filename)
             filepath = os.path.join(root.newdir, filename)
             cv.imwrite(filepath, thresh)
-            # thresh = nd array of binary image
 
-            # print(thresh)
             # write stats to csv
-            agg_area = conv.ptCount(thresh)
+            agg_area = conv.ptCount(thresh) # aggregate area
             print("projected area: ", agg_area)
-            conv_area = conv.convMATLAB(thresh)
+            conv_area = conv.convMATLAB(thresh) # convex hull area
             print("convex area: ", conv_area)
-
             w2csv.writerow([filename, agg_area/conv_area, agg_area, conv_area])
