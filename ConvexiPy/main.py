@@ -6,12 +6,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import convexity as conv
+from convexcropper import ConvexCropper
 from croppertk import Cropper
 
 imgexts = ['jpg', 'tif', 'png', 'bmp']
 
-# creates UI object from which file is selected and crops are perfroemd 
-root = Cropper()
+# creates UI object from which file is selected and crops are perfroemd
+root = ConvexCropper()
 root.mainloop()
 
 # directory where output images are stored
@@ -29,7 +30,7 @@ with open(csvname, 'w', newline='') as csvfile:
         if any(file.endswith(x) for x in imgexts):
             # read image from dir
             img = cv.imread(os.path.join(root.newdir, file), 0)
-            
+
             # thresh = nd array of binary image, ret is not used
             ret, thresh = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
 
@@ -40,8 +41,8 @@ with open(csvname, 'w', newline='') as csvfile:
             cv.imwrite(filepath, thresh)
 
             # write stats to csv
-            agg_area = conv.ptCount(thresh) # aggregate area
+            agg_area = conv.ptCount(thresh)  # aggregate area
             print("projected area: ", agg_area)
-            conv_area = conv.convMATLAB(thresh) # convex hull area
+            conv_area = conv.convMATLAB(thresh)  # convex hull area
             print("convex area: ", conv_area)
             w2csv.writerow([filename, agg_area/conv_area, agg_area, conv_area])
