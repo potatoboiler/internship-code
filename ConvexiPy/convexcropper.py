@@ -11,11 +11,10 @@ import convexity as conv
 from croppertk import *
 from rect import Rect
 
-font = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 10)
+font = ImageFont.truetype('arial.ttf', size=10)
 
 
 class ConvexCropper(Cropper):
-    @Override
     def start_cropping(self):
         cropcount = 0
         # used for writing text onto image
@@ -23,8 +22,8 @@ class ConvexCropper(Cropper):
 
         # og_filename i think is the base of the name of the original file
         self.og_filename = os.path.splitext(self.filename.split('/')[-1])[0]
-        self.extension = os.path.splitext(self.filename.split('/')[-1][1])
-        print(self.extension)
+        self.extension = os.path.splitext(self.filename.split('/')[-1])[-1]
+        print(self.extension, '   extension')
         self.newdir = os.path.join(
             os.getcwd() + os.sep + 'crops_' + self.og_filename + os.sep)
         try:
@@ -42,11 +41,10 @@ class ConvexCropper(Cropper):
 
         # write image
         self.image.save(os.path.join(
-            os.getcwd() + os.sep + 'convex_' + self.og_filename))
+            os.getcwd() + os.sep + 'convex_' + self.og_filename + self.extension))
 
         self.quit()
 
-    @Override
     def crop(self, croparea, filename):
         # save crop
         ca = (croparea.left, croparea.top, croparea.right, croparea.bottom)
@@ -54,10 +52,11 @@ class ConvexCropper(Cropper):
         newimg.save(filename)
 
         # write convexity onto file
-        ret, thresh = cv.threshold(newimg, 127, 255, cv.THRESH_BINARY)
+        ret, thresh = cv.threshold(
+            cv.imread(filename, 0), 127, 255, cv.THRESH_BINARY)
         convexity = conv.ptCount(thresh) / conv.convMATLAB(thresh)
 
-        self.draw.text(xy=(croparea.left, croparea.top),
-                       text=convexity,
-                       fill=(255, 255, 255)
+        self.draw.text((croparea.left, croparea.top),
+                       text=str(convexity),
+                       fill=(255)
                        )
