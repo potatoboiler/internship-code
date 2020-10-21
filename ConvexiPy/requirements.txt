@@ -1,7 +1,7 @@
-opencv-contrib-python==4.4.0.44
+opencv-python
 pathlib
 #replace PIL with Pillow please
-Pillow==7.2.0
+Pillow
 scipy
 numpy
 matplotlib
