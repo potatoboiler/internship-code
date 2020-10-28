@@ -11,7 +11,7 @@ import convexity as conv
 from croppertk import *
 from rect import Rect
 
-font = ImageFont.truetype('arial.ttf', size=10)
+font = ImageFont.truetype("arial.ttf", size=26)
 
 
 class ConvexCropper(Cropper):
@@ -57,6 +57,6 @@ class ConvexCropper(Cropper):
         convexity = conv.ptCount(thresh) / conv.convMATLAB(thresh)
 
         self.draw.text((croparea.left, croparea.top),
-                       text=str(convexity),
-                       fill=(255)
-                       )
+                       text=str(round(convexity, ndigits=4)),
+                       fill=(255,255,255),
+                       font=font)
