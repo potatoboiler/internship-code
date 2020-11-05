@@ -20,6 +20,26 @@ thumbsize = 896, 608
 thumboffset = 16
 
 
+class CropperMenuBar(tk.Menu):
+    def __init__(self, master):
+        self.menubar = tk.Menu(self)
+
+    def create_filemenu(self):
+        pass
+
+    def create_editmenu(self):
+        pass
+
+    def create_aboutmenu(self):
+        pass
+
+    def create_guidemenu(self):
+        pass
+
+    def create_toolsmenu(self):
+        pass
+
+
 class Cropper(tk.Tk, CropperMenuBar):
 
     def __init__(self, master=None):
@@ -63,26 +83,6 @@ class Cropper(tk.Tk, CropperMenuBar):
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.quit)
         menubar.add_cascade(label="File", menu=filemenu)
-
-
-class CropperMenuBar(tk.Menu):
-    def __init__(self, master):
-        self.menubar = tk.Menu(self)
-
-    def create_filemenu(self):
-        pass
-
-    def create_editmenu(self):
-        pass
-
-    def create_aboutmenu(self):
-        pass
-
-    def create_guidemenu(self):
-        pass
-
-    def create_toolsmenu(self):
-        pass
 
 
 class init_frame(tk.Frame):
