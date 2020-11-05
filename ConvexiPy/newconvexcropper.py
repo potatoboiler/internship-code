@@ -37,8 +37,17 @@ class Cropper(tk.Tk, CropperMenuBar):
     def call_frame(self, frameobj):
         pass
 
+    '''Menu stuff'''
 
-class Menu(tk.Menu):
+    def create_filemenu(self, menubar):
+        filemenu = tk.Menu(master=menubar, tearoff=0)
+        filemenu.add_command(label="Open", command=self.getFile())
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit", command=self.quit)
+        menubar.add_cascade(label="File", menu=filemenu)
+
+
+class CropperMenuBar(tk.Menu):
     def __init__(self, master):
         self.menubar = tk.Menu(self)
 
