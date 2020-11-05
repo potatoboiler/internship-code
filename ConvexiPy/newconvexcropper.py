@@ -21,14 +21,34 @@ thumboffset = 16
 
 
 class Cropper(tk.Tk):
-    pass
+
+    def __init__(self, master=None):
+        tk.Tk.__init__(self, master)
+        pass
+
+    def init_file_menu(self):
+        menubar = tk.Menu(self)
+
+    def init_canvas(self, image):
+        pass
+
+    def call_frame(self, frameobj):
+        pass
 
 
 class init_frame(tk.Frame):
     pass
 
 
-class alt_frame(tk.Frame):
+class edit_frame(tk.Frame):
+    pass
+
+
+class bw_frame(tk.Frame):
+    pass
+
+
+class crop_edit_frame(tk.Frame):
     pass
 
 
