@@ -36,6 +36,26 @@ class Cropper(tk.Tk):
         pass
 
 
+class Menu(tk.Menu):
+    def __init__(self, master):
+        self.menubar = tk.Menu(self)
+
+    def create_filemenu(self):
+        pass
+
+    def create_editmenu(self):
+        pass
+
+    def create_aboutmenu(self):
+        pass
+
+    def create_guidemenu(self):
+        pass
+
+    def create_toolsmenu(self):
+        pass
+
+
 class init_frame(tk.Frame):
     pass
 
