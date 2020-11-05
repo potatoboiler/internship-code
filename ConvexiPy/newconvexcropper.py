@@ -24,6 +24,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     def __init__(self, master=None):
         tk.Tk.__init__(self, master)
+        self._frame = None
         pass
 
     '''window initiators'''
@@ -34,8 +35,13 @@ class Cropper(tk.Tk, CropperMenuBar):
     def init_canvas(self, image):
         pass
 
-    def call_frame(self, frameobj):
-        pass
+    def switch_frame(self, frameobj, **kwargs):
+        # idk if kwargs will pass its items or itself
+        new_frame = frameobj(self, **kwargs)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
+        self._frame.pack()
 
     '''utility functions'''
 
