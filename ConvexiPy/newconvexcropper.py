@@ -20,11 +20,13 @@ thumbsize = 896, 608
 thumboffset = 16
 
 
-class Cropper(tk.Tk):
+class Cropper(tk.Tk, CropperMenuBar):
 
     def __init__(self, master=None):
         tk.Tk.__init__(self, master)
         pass
+
+    '''window initiators'''
 
     def init_file_menu(self):
         menubar = tk.Menu(self)
