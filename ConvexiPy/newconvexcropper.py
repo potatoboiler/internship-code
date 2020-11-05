@@ -37,6 +37,18 @@ class Cropper(tk.Tk, CropperMenuBar):
     def call_frame(self, frameobj):
         pass
 
+    '''utility functions'''
+
+    def getFile(self):  # should return image
+        self.file = tkfd.askopenfile(mode='rb', filetypes=[
+            ('Image Files', '.jpg .JPG .jpeg .JPEG .png .PNG .tif .TIF .tiff .TIFF'),
+            ('TIFF Image Files', '.tif .TIF .tiff .TIFF')
+        ])
+        self.image = Image.open(self.file)
+        self.filename = self.file.name
+
+        # need to redraw canvas and wipe stored crop metadata
+
     '''Menu stuff'''
 
     def create_filemenu(self, menubar):
