@@ -39,9 +39,11 @@ with open(csvname, 'w', newline='') as csvfile:
             filepath = os.path.join(root.newdir, filename)
             cv.imwrite(filepath, thresh)
 
-            # write stats to csv
-            agg_area = conv.ptCount(thresh)  # aggregate area
-            print("projected area: ", agg_area)
-            conv_area = conv.convMATLAB(thresh)  # convex hull area
-            print("convex area: ", conv_area)
-            w2csv.writerow([filename, agg_area/conv_area, agg_area, conv_area])
+            if not conv.disableMATLABcomponents:
+                # write stats to csv
+                agg_area = conv.ptCount(thresh)  # aggregate area
+                print("projected area: ", agg_area)
+                conv_area = conv.convMATLAB(thresh)  # convex hull area
+                print("convex area: ", conv_area)
+                w2csv.writerow(
+                    [filename, agg_area/conv_area, agg_area, conv_area])

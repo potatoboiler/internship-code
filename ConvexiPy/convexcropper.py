@@ -12,6 +12,7 @@ from croppertk import *
 from rect import Rect
 
 font = ImageFont.truetype("arial.ttf", size=26)
+disableMATLABcomponents = True
 
 
 class ConvexCropper(Cropper):
@@ -54,9 +55,11 @@ class ConvexCropper(Cropper):
         # write convexity onto file
         ret, thresh = cv.threshold(
             cv.imread(filename, 0), 127, 255, cv.THRESH_BINARY)
-        convexity = conv.ptCount(thresh) / conv.convMATLAB(thresh)
+        
+        convexity = conv.ptCount(thresh) / conv.convMATLAB(thresh)[0] if not disableMATLABcomponents else 0
 
         self.draw.text((croparea.left, croparea.top),
                        text=str(round(convexity, ndigits=4)),
                        fill=(255,255,255),
                        font=font)
+
