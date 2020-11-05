@@ -116,13 +116,19 @@ class Cropper(tk.Tk, CropperMenuBar):
         else:
             raise FileNotFoundError
 
+    def saveOG(self):
+        saveImage(self.original_img)
+
+    def saveED(self):
+        saveImage(self.edited_img)
+
     '''Menu stuff'''
 
     def create_filemenu(self, menubar):
         filemenu = tk.Menu(master=menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.getFile)
-        filemenu.add_command(label="Save original image", command=self.getFile)
-        filemenu.add_command(label="Save edited image", command=self.getFile)
+        filemenu.add_command(label="Save original image", command=self.saveOG)
+        filemenu.add_command(label="Save edited image", command=self.saveED)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.quit)
         menubar.add_cascade(label="File", menu=filemenu)
