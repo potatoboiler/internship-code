@@ -44,13 +44,11 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     def __init__(self, master=None):
         tk.Tk.__init__(self, master)
-        self._frame = None
-        pass
+        self.grid()
 
-    '''window initiators'''
-
-    def init_file_menu(self):
-        menubar = tk.Menu(self)
+        '''create menu bar'''
+        self.init_menu_bar()
+        self.config(menu=self.menubar)
 
     def init_canvas(self, image):
         pass
