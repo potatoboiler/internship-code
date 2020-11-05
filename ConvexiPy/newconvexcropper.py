@@ -50,10 +50,41 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.init_menu_bar()
         self.config(menu=self.menubar)
 
+        self._frame = None
+
+        # crop area
+        self.croprect_start = None
+        self.croprect_end = None
+
+        # various rectangles
+        self.canvas_rects = []  # drawn rects on image
+        self.crop_rects = []  # crop areas
+        self.region_rect = []  # zoom windows
+        self.current_rect = None
+
+        # just some mode trackers
+        self.zoommode = False  # ??
+        self.countour = False  # ??
+        self.acbwmode = False  # black/white
+        self.zooming = False  # ??
+
+        # properties used for cropping
+        self.w = 1
+        self.h = 1
+        self.x0 = 0
+        self.y0 = 0
+        self.n = 0
+
+    '''window initiators'''
+
+    def init_menu_bar(self):
+        self.menubar = tk.Menu(master=self)
+        self.create_filemenu(menubar=self.menubar)
+
     def init_canvas(self, image):
         pass
 
-    def switch_frame(self, frameobj, **kwargs):
+    def switch_frame(self, frameobj, *args, **kwargs):
         # idk if kwargs will pass its items or itself
         new_frame = frameobj(self, **kwargs)
         if self._frame is not None:
