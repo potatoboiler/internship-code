@@ -46,6 +46,9 @@ class Cropper(tk.Tk, CropperMenuBar):
         tk.Tk.__init__(self, master)
         self.grid()
 
+        self.original_img = None
+        self.edited_img = None
+
         '''create menu bar'''
         self.init_menu_bar()
         self.config(menu=self.menubar)
@@ -104,11 +107,22 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         # need to redraw canvas and wipe stored crop metadata
 
+    def saveImage(self, image):
+        if image is not None:
+            filename = tkfd.asksaveasfilename()
+            file = open(image, mode='a')
+            file.write(filename)
+            file.close()
+        else:
+            raise FileNotFoundError
+
     '''Menu stuff'''
 
     def create_filemenu(self, menubar):
         filemenu = tk.Menu(master=menubar, tearoff=0)
-        filemenu.add_command(label="Open", command=self.getFile())
+        filemenu.add_command(label="Open", command=self.getFile)
+        filemenu.add_command(label="Save original image", command=self.getFile)
+        filemenu.add_command(label="Save edited image", command=self.getFile)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.quit)
         menubar.add_cascade(label="File", menu=filemenu)
