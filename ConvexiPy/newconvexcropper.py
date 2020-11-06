@@ -18,6 +18,7 @@ VERSION = '0.20200509'
 
 thumbsize = 896, 608
 thumboffset = 16
+frameoffset = 10
 
 
 class CropperMenuBar(tk.Menu):
@@ -176,7 +177,7 @@ class Cropper(tk.Tk, CropperMenuBar):
             self._frame, text='Mode tools', padx=40)
         self.blankButton = tk.Button(self.blankFrame, padx=20)
 
-        self._frame.grid()
+        self._frame.grid(pady=frameoffset)
         self.blankFrame.grid(row=0, column=0)
         self.toolButtons.grid(row=0, column=1)
 
@@ -199,7 +200,7 @@ class Cropper(tk.Tk, CropperMenuBar):
             self._frame, text='Draw tools', padx=0)
         # self.drawPencil =
 
-        self._frame.grid()
+        self._frame.grid(pady=frameoffset)
         self.toolButtons.grid(row=0, column=0)
 
         self.backButton.grid(row=0, column=0)
@@ -222,7 +223,7 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.bwInc = tk.Button(self.bwToolsFrame, text='+1', command=self.incBWT)
         self.bwDec = tk.Button(self.bwToolsFrame, text='-1', command=self.decBWT)
 
-        self._frame.grid()
+        self._frame.grid(pady=frameoffset)
         self.bwToolsFrame.grid(row=0, column=0)
         self.toolButtons.grid(row=0, column=1)
 
