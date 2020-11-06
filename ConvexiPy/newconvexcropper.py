@@ -45,6 +45,13 @@ class Cropper(tk.Tk, CropperMenuBar):
     def __init__(self, master=None):
         tk.Tk.__init__(self, master)
         self.grid()
+        self.initCanvas()
+
+        # holds separate menu frames
+        self.container = tk.Frame(self)
+        self._frame = None
+
+        self.init_base_frame()
 
         self.original_img = None
         self.edited_img = None
@@ -52,8 +59,6 @@ class Cropper(tk.Tk, CropperMenuBar):
         '''create menu bar'''
         self.init_menu_bar()
         self.config(menu=self.menubar)
-
-        self._frame = None
 
         # crop area
         self.croprect_start = None
@@ -133,21 +138,56 @@ class Cropper(tk.Tk, CropperMenuBar):
         filemenu.add_command(label="Exit", command=self.quit)
         menubar.add_cascade(label="File", menu=filemenu)
 
+    '''frames'''
 
-class init_frame(tk.Frame):
-    pass
+    def first_menu_step(self):
+        '''destroys current tool frame, attaches basic menu steps'''
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = tk.Frame(self)
+        self.init_basic_menu()
+
+    def init_base_frame(self):
+        '''basic menu, created upon startup and navigates to others'''
+        self.first_menu_step()
+
+        self.toolButtons = tk.LabelFrame(self._frame, text='Utilities')
+        self.binarizeButton = tk.Button(
+            master=self.toolButtons, text='BW', command=dummy)
+        self.drawButton = tk.Button(
+            master=self.toolButtons, text='Draw', command=dummy)
+
+        self._frame.grid()
+        self.toolButtons.grid(row=0, column=0)
+
+        self.drawButton.grid(row=0, column=0)
+        self.binarizeButton.grid(row=0, column=1)
+
+    def init_draw_frame(self):
+        '''draw stuff'''
+        self.first_menu_step()
+
+    def init_bw_frame(self):
+        self.first_menu_step()
+
+    def init_basic_menu(self):
+        self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
+
+        self.cropsButton = tk.Button(self.basicButtons, text='Crop')
+        self.resetButton = tk.Button(self.basicButtons, text='Reset')
+        self.undoButton = tk.Button(self.basicButtons, text='Undo')
+        self.exitButton = tk.Button(
+            self.basicButtons, text='Exit', command=self.quit)
+
+        self.basicButtons.grid(row=0, column=1, padx=50)
+        self.cropsButton.grid(row=0, column=0)
+        self.resetButton.grid(row=0, column=1)
+        self.undoButton.grid(row=0, column=2)
+        self.exitButton.grid(row=0, column=4)
 
 
-class edit_frame(tk.Frame):
-    pass
-
-
-class bw_frame(tk.Frame):
-    pass
-
-
-class crop_edit_frame(tk.Frame):
-    pass
+def dummy():
+    print('dummy')
 
 
 def main():
