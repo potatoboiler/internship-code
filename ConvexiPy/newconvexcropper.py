@@ -55,6 +55,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.original_img = None
         self.edited_img = None
+        self.undo_cache = None
 
         '''create menu bar'''
         self.init_menu_bar()
