@@ -84,6 +84,9 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.y0 = 0
         self.n = 0
 
+        # data members
+        self.bw_thresh = 127
+
     '''window initiators'''
 
     def init_menu_bar(self):
@@ -179,8 +182,45 @@ class Cropper(tk.Tk, CropperMenuBar):
         '''draw stuff'''
         self.first_menu_step()
 
+        self.toolButtons = tk.LabelFrame(self._frame, text='Utilities')
+        self.binarizeButton = tk.Button(
+            master=self.toolButtons, text='BW', command=self.init_bw_frame)
+        self.backButton = tk.Button(
+            master=self.toolButtons, text='Back', command=self.init_base_frame)
+
+        self.drawToolsFrame = tk.LabelFrame(
+            self._frame, text='Draw tools', padx=0)
+        # self.drawPencil =
+
+        self._frame.grid()
+        self.toolButtons.grid(row=0, column=0)
+
+        self.backButton.grid(row=0, column=0)
+        self.binarizeButton.grid(row=0, column=1)
+
     def init_bw_frame(self):
         self.first_menu_step()
+
+        self.toolButtons = tk.LabelFrame(self._frame, text='Utilities')
+        self.drawButton = tk.Button(
+            master=self.toolButtons, text='BW', command=self.init_draw_frame)
+        self.backButton = tk.Button(
+            master=self.toolButtons, text='Back', command=self.init_base_frame)
+
+        self.bwToolsFrame = tk.LabelFrame(
+            self._frame, text='Black/White tools', padx=0)
+        self.bwThresholdScale = tk.Scale(
+            master=self.bwToolsFrame, from_=0, to=255, orient=tk.HORIZONTAL,label='Threshold')
+        self.bwThresholdScale.set(self.bw_thresh)
+
+        self._frame.grid()
+        self.bwToolsFrame.grid(row=0, column=0)
+        self.toolButtons.grid(row=0, column=1)
+
+        self.bwThresholdScale.grid()
+
+        self.drawButton.grid(row=0, column=0)
+        self.backButton.grid(row=0, column=1)
 
     def init_basic_menu(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
