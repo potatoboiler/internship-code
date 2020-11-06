@@ -97,8 +97,19 @@ class Cropper(tk.Tk, CropperMenuBar):
         new_frame = frameobj(self, **kwargs)
         if self._frame is not None:
             self._frame.destroy()
-        self._frame = new_frame
-        self._frame.pack()
+        #self._frame = new_frame
+        # self._frame.grid()
+
+    def initCanvas(self):
+        self.canvas = tk.Canvas(
+            self, height=500, width=500, relief=tk.SUNKEN)
+
+        # these should get moved into a frame mode
+        #self.canvas.bind('<Button-1>', self.canvas_mouse1_callback)
+        #self.canvas.bind('<ButtonRelease-1>', self.canvas_mouseup1_callback)
+        #self.canvas.bind('<B1-Motion>', self.canvas_mouseb1move_callback)
+
+        self.canvas.grid()
 
     '''utility functions'''
 
