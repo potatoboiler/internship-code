@@ -168,12 +168,19 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.toolButtons = tk.LabelFrame(self._frame, text='Utilities')
         self.binarizeButton = tk.Button(
-            master=self.toolButtons, text='BW', command=dummy)
+            master=self.toolButtons, text='BW', command=self.init_bw_frame)
         self.drawButton = tk.Button(
-            master=self.toolButtons, text='Draw', command=dummy)
+            master=self.toolButtons, text='Draw', command=self.init_draw_frame)
+
+        self.blankFrame = tk.LabelFrame(
+            self._frame, text='Mode tools', padx=40)
+        self.blankButton = tk.Button(self.blankFrame, padx=20)
 
         self._frame.grid()
-        self.toolButtons.grid(row=0, column=0)
+        self.blankFrame.grid(row=0, column=0)
+        self.toolButtons.grid(row=0, column=1)
+
+        self.blankButton.grid(row=0, column=0)
 
         self.drawButton.grid(row=0, column=0)
         self.binarizeButton.grid(row=0, column=1)
@@ -231,7 +238,7 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.exitButton = tk.Button(
             self.basicButtons, text='Exit', command=self.quit)
 
-        self.basicButtons.grid(row=0, column=1, padx=50)
+        self.basicButtons.grid(row=0, column=2, padx=0)
         self.cropsButton.grid(row=0, column=0)
         self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
