@@ -217,17 +217,30 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.bwToolsFrame = tk.LabelFrame(
             self._frame, text='Black/White tools', padx=0)
         self.bwThresholdScale = tk.Scale(
-            master=self.bwToolsFrame, from_=0, to=255, orient=tk.HORIZONTAL,label='Threshold')
+            master=self.bwToolsFrame, from_=0, to=255, orient=tk.HORIZONTAL, label='Threshold')
         self.bwThresholdScale.set(self.bw_thresh)
+        self.bwInc = tk.Button(self.bwToolsFrame, text='+1', command=self.incBWT)
+        self.bwDec = tk.Button(self.bwToolsFrame, text='-1', command=self.decBWT)
 
         self._frame.grid()
         self.bwToolsFrame.grid(row=0, column=0)
         self.toolButtons.grid(row=0, column=1)
 
-        self.bwThresholdScale.grid()
+        # add these buttons back in later
+        #self.bwDec.grid(row=0, column=0)
+        self.bwThresholdScale.grid(row=0, column=1)
+        #self.bwInc.grid(row=0, column=2)
 
         self.drawButton.grid(row=0, column=0)
         self.backButton.grid(row=0, column=1)
+
+    def incBWT(self):
+        self.bw_thresh += 1
+        self.bwThresholdScale.set(self.bw_thresh)
+
+    def decBWT(self):
+        self.bw_thresh -= 1
+        self.bwThresholdScale.set(self.bw_thresh)
 
     def init_basic_menu(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
