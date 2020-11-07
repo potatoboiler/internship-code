@@ -301,11 +301,27 @@ class Cropper(tk.Tk, CropperMenuBar):
             anchor=tk.NW,
             image=self.photoimage)
 
+        print(self.w)
+        print(self.photoimage.width())
+        self.edited_img = np.copy(self.photoimage)
+        self.canvas.create_image(2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
+
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
         self.scale = (x_scale, y_scale)
         self.redraw_rect()
-        self.set_button_state()
+
+    ''' Rect ops '''
+
+    def redraw_rect(self):
+        for croparea in self.crop_rects:
+            self.drawrect(croparea.rescale_rect(self.scale, self.x0, self.y0))
+
+    def drawrect(self, rect):
+        bbox = (rect.left, rect.top, rect.right, rect.bottom)
+        cr = self.canvas.create_rectangle(
+            bbox, activefill='', fill='red', stipple='gray25')
+        self.canvas_rects.append(cr)
 
 
 def dummy():
