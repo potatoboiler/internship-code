@@ -55,9 +55,8 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.init_base_frame()
 
-        self.original_img = None  # this can get replaced by self.photoimage
         self.edited_img = None
-        self.undo_cache = None
+        self.undo_cache = list()
 
         '''create menu bar'''
         self.init_menu_bar()
@@ -110,9 +109,9 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.canvas = tk.Canvas(self, height=1, width=1, relief=tk.SUNKEN)
 
         # these should get moved into a frame mode
-        #self.canvas.bind('<Button-1>', self.canvas_mouse1_callback)
-        #self.canvas.bind('<ButtonRelease-1>', self.canvas_mouseup1_callback)
-        #self.canvas.bind('<B1-Motion>', self.canvas_mouseb1move_callback)
+        self.canvas.bind('<Button-1>', self.canvas_mouse1_callback)
+        self.canvas.bind('<ButtonRelease-1>', self.canvas_mouseup1_callback)
+        self.canvas.bind('<B1-Motion>', self.canvas_mouseb1move_callback)
 
         self.canvas.grid()
 
@@ -142,6 +141,38 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     def saveED(self):
         saveImage(self.edited_img)
+
+    def canvas_mouse1_callback(self, event):
+        # print(event.x, event.y)
+        self.croprect_start = (event.x, event.y)
+        print(event.x, ", ", event.y)
+
+    def canvas_mouseb1move_callback(self, event):
+        if self.current_rect:
+            self.canvas.delete(self.current_rect)
+        x1 = self.croprect_start[0]
+        y1 = self.croprect_start[1]
+        x2 = event.x
+        y2 = event.y
+        #print(x2, ", ", y2)
+        bbox = (x1, y1, x2, y2)
+        cr = self.canvas.create_rectangle(bbox)
+        self.current_rect = cr
+
+    def canvas_mouseup1_callback(self, event):
+        self.croprect_end = (event.x, event.y)
+        self.set_crop_area()
+        # print("END!")
+        self.canvas.delete(self.current_rect)
+        self.current_rect = None
+
+    def undo(self):
+        if not self.undo_cache:
+            print("Nothing to undo!")
+            return
+        self.edited_img = self.undo_cache.pop()
+        self.canvas.create_image(
+            2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
 
     '''Menu stuff'''
 
@@ -247,14 +278,15 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     def updateBWT(self, event):
         self.bw_thresh = self.bwThresholdScale.get()
-        print(self.bw_thresh)
+        # print(self.bw_thresh)
 
     def init_basic_menu(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
 
         self.cropsButton = tk.Button(self.basicButtons, text='Crop')
         self.resetButton = tk.Button(self.basicButtons, text='Reset')
-        self.undoButton = tk.Button(self.basicButtons, text='Undo')
+        self.undoButton = tk.Button(
+            self.basicButtons, text='Undo', command=self.undo)
         self.exitButton = tk.Button(
             self.basicButtons, text='Exit', command=self.quit)
 
@@ -295,16 +327,19 @@ class Cropper(tk.Tk, CropperMenuBar):
             width=(2*w + 3 * thumboffset),
             height=(h + 2 * thumboffset))
 
+        # print(self.w)
+        # print(self.photoimage.width())
+        self.edited_img = np.copy(self.photoimage)
+
+        self.undo_cache.append(self.edited_img)
+
         self.canvas.create_image(
             thumboffset,
             thumboffset,
             anchor=tk.NW,
             image=self.photoimage)
-
-        print(self.w)
-        print(self.photoimage.width())
-        self.edited_img = np.copy(self.photoimage)
-        self.canvas.create_image(2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
+        self.canvas.create_image(
+            2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
 
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
