@@ -172,7 +172,7 @@ class Cropper(tk.Tk, CropperMenuBar):
             return
         self.edited_img = self.undo_cache.pop()
         self.canvas.create_image(
-            2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
+            2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_img)
 
     '''Menu stuff'''
 
@@ -322,10 +322,10 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.image_thumb_rect = Rect(self.image_thumb.size)
 
         self.photoimage = ImageTk.PhotoImage(self.image_thumb)
-        w, h = self.image_thumb.size
+        self.img_w, self.img_h = self.image_thumb.size
         self.canvas.configure(
-            width=(2*w + 3 * thumboffset),
-            height=(h + 2 * thumboffset))
+            width=(2*self.img_w + 3 * thumboffset),
+            height=(self.img_h + 2 * thumboffset))
 
         # print(self.w)
         # print(self.photoimage.width())
@@ -339,7 +339,7 @@ class Cropper(tk.Tk, CropperMenuBar):
             anchor=tk.NW,
             image=self.photoimage)
         self.canvas.create_image(
-            2*thumboffset + w, thumboffset, anchor=tk.NW, image=self.edited_img)
+            2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_img)
 
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
