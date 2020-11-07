@@ -117,16 +117,6 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     '''utility functions'''
 
-    def getFile(self):  # should return image
-        self.file = tkfd.askopenfile(mode='rb', filetypes=[
-            ('Image Files', '.jpg .JPG .jpeg .JPEG .png .PNG .tif .TIF .tiff .TIFF'),
-            ('TIFF Image Files', '.tif .TIF .tiff .TIFF')
-        ])
-        self.image = Image.open(self.file)
-        self.filename = self.file.name
-
-        # need to redraw canvas and wipe stored crop metadata
-
     def saveImage(self, image):
         if image is not None:
             filename = tkfd.asksaveasfilename()
@@ -305,6 +295,8 @@ class Cropper(tk.Tk, CropperMenuBar):
         ])
         self.image = Image.open(self.file)
         self.filename = self.file.name
+
+        # need to redraw canvas and wipe stored crop metadata
 
     def loadimage(self):
         self.image_rect = Rect(self.image.size)
