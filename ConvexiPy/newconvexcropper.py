@@ -88,6 +88,9 @@ class Cropper(tk.Tk, CropperMenuBar):
         # data members
         self.bw_thresh = 127
 
+        self.getFile()
+        self.loadimage()
+
     '''window initiators'''
 
     def init_menu_bar(self):
@@ -261,6 +264,49 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
         self.exitButton.grid(row=0, column=4)
+
+    ''' file ops '''
+
+    def getFile(self):  # should return image
+        self.file = tkfd.askopenfile(mode='rb', filetypes=[
+            ('Image Files', '.jpg .JPG .jpeg .JPEG .png .PNG .tif .TIF .tiff .TIFF'),
+            ('TIFF Image Files', '.tif .TIF .tiff .TIFF')
+        ])
+        self.image = Image.open(self.file)
+        self.filename = self.file.name
+
+    def loadimage(self):
+        self.image_rect = Rect(self.image.size)
+        self.w = self.image_rect.w
+        self.h = self.image_rect.h
+        self.region_rect = Rect((0, 0), (self.w, self.h))
+        self.displayimage()
+
+    def displayimage(self):
+        rr = (self.region_rect.left, self.region_rect.top,
+              self.region_rect.right, self.region_rect.bottom)
+        self.image_thumb = self.image.crop(rr)
+        self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
+
+        self.image_thumb_rect = Rect(self.image_thumb.size)
+
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb)
+        w, h = self.image_thumb.size
+        self.canvas.configure(
+            width=(w + 2 * thumboffset),
+            height=(h + 2 * thumboffset))
+
+        self.canvas.create_image(
+            thumboffset,
+            thumboffset,
+            anchor=tk.NW,
+            image=self.photoimage)
+
+        x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
+        y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
+        self.scale = (x_scale, y_scale)
+        self.redraw_rect()
+        self.set_button_state()
 
 
 def dummy():
