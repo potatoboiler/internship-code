@@ -98,9 +98,6 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.menubar = tk.Menu(master=self)
         self.create_filemenu(menubar=self.menubar)
 
-    def init_canvas(self, image):
-        pass
-
     def switch_frame(self, frameobj, *args, **kwargs):
         # idk if kwargs will pass its items or itself
         new_frame = frameobj(self, **kwargs)
