@@ -9,6 +9,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog as tkfd
 
+import numpy as np
 from PIL import Image, ImageChops, ImageFilter, ImageTk
 
 from rect import Rect
@@ -54,7 +55,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.init_base_frame()
 
-        self.original_img = None
+        self.original_img = None  # this can get replaced by self.photoimage
         self.edited_img = None
         self.undo_cache = None
 
@@ -109,8 +110,7 @@ class Cropper(tk.Tk, CropperMenuBar):
         # self._frame.grid()
 
     def initCanvas(self):
-        self.canvas = tk.Canvas(
-            self, height=500, width=500, relief=tk.SUNKEN)
+        self.canvas = tk.Canvas(self, height=1, width=1, relief=tk.SUNKEN)
 
         # these should get moved into a frame mode
         #self.canvas.bind('<Button-1>', self.canvas_mouse1_callback)
@@ -295,7 +295,7 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.photoimage = ImageTk.PhotoImage(self.image_thumb)
         w, h = self.image_thumb.size
         self.canvas.configure(
-            width=(w + 2 * thumboffset),
+            width=(2*w + 3 * thumboffset),
             height=(h + 2 * thumboffset))
 
         self.canvas.create_image(
