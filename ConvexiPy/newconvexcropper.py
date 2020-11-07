@@ -223,8 +223,10 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.bwThresholdScale = tk.Scale(
             master=self.bwToolsFrame, from_=0, to=255, orient=tk.HORIZONTAL, label='Threshold', command=self.updateBWT)
         self.bwThresholdScale.set(self.bw_thresh)
-        self.bwInc = tk.Button(self.bwToolsFrame, text='+1', command=self.incBWT)
-        self.bwDec = tk.Button(self.bwToolsFrame, text='-1', command=self.decBWT)
+        self.bwInc = tk.Button(
+            self.bwToolsFrame, text='+1', command=self.incBWT)
+        self.bwDec = tk.Button(
+            self.bwToolsFrame, text='-1', command=self.decBWT)
 
         self._frame.grid(pady=frameoffset)
         self.bwToolsFrame.grid(row=0, column=0)
