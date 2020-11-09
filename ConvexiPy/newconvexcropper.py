@@ -245,19 +245,33 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.bwThresholdScale = tk.Scale(
             master=self.bwToolsFrame, from_=0, to=255, orient=tk.HORIZONTAL, label='Threshold', command=self.updateBWT)
         self.bwThresholdScale.set(self.bw_thresh)
+
         self.bwInc = tk.Button(
-            self.bwToolsFrame, text='+1', command=self.incBWT)
+            self.bwToolsFrame, text='+1', command=self.incBWT5)
+        self.bwInc5 = tk.Button(
+            self.bwToolsFrame, text='+5', command=self.incBWT5)
+        self.bwInc10 = tk.Button(
+            self.bwToolsFrame, text='+10', command=self.incBWT10)
+
         self.bwDec = tk.Button(
             self.bwToolsFrame, text='-1', command=self.decBWT)
+        self.bwDec5 = tk.Button(
+            self.bwToolsFrame, text='-5', command=self.decBWT5)
+        self.bwDec10 = tk.Button(
+            self.bwToolsFrame, text='-10', command=self.decBWT10)
 
         self._frame.grid(pady=frameoffset)
         self.bwToolsFrame.grid(row=0, column=0)
         self.toolButtons.grid(row=0, column=1)
 
         # add these buttons back in later
-        self.bwDec.grid(row=0, column=0)
-        self.bwThresholdScale.grid(row=0, column=1)
-        self.bwInc.grid(row=0, column=2)
+        self.bwDec10.grid(row=0,column=0)
+        self.bwDec5.grid(row=0,column=1)
+        self.bwDec.grid(row=0, column=2)
+        self.bwThresholdScale.grid(row=0, column=3)
+        self.bwInc.grid(row=0, column=4)
+        self.bwInc5.grid(row=0,column=5)
+        self.bwInc10.grid(row=0,column=6)
 
         self.drawButton.grid(row=0, column=0)
         self.backButton.grid(row=0, column=1)
@@ -266,9 +280,25 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.bw_thresh += 1
         self.bwThresholdScale.set(self.bw_thresh)
 
+    def incBWT5(self):
+        for i in range(5):
+            self.incBWT()
+
+    def incBWT10(self):
+        for i in range(10):
+            self.incBWT()
+
     def decBWT(self):
         self.bw_thresh -= 1
         self.bwThresholdScale.set(self.bw_thresh)
+
+    def decBWT5(self):
+        for i in range(5):
+            self.decBWT()
+
+    def decBWT10(self):
+        for i in range(10):
+            self.decBWT()
 
     def updateBWT(self, event):
         self.bw_thresh = self.bwThresholdScale.get()
