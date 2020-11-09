@@ -236,7 +236,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.toolButtons = tk.LabelFrame(self._frame, text='Utilities')
         self.drawButton = tk.Button(
-            master=self.toolButtons, text='BW', command=self.init_draw_frame)
+            master=self.toolButtons, text='Draw', command=self.init_draw_frame)
         self.backButton = tk.Button(
             master=self.toolButtons, text='Back', command=self.init_base_frame)
 
@@ -313,7 +313,7 @@ class Cropper(tk.Tk, CropperMenuBar):
             type=cv.THRESH_BINARY
         )[1])
 
-        #print(type(self.edited_img))
+        # print(type(self.edited_img))
 
         self.display_edited()
 
@@ -355,7 +355,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.displayimage()
 
-    def displayimage(self): # to do: substitute all edited image operations
+    def displayimage(self):  # to do: substitute all edited image operations
         self.rr = (self.region_rect.left, self.region_rect.top,
                    self.region_rect.right, self.region_rect.bottom)
         self.image_thumb = self.image.crop(self.rr)

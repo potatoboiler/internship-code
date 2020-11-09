@@ -17,7 +17,6 @@ from pathlib import Path
 from tkinter import filedialog as tkfd
 
 from PIL import Image, ImageChops, ImageFilter, ImageTk
-
 from rect import Rect
 
 PROGNAME = 'Cropper-Tk'
