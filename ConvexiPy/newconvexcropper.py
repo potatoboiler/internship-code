@@ -115,6 +115,8 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.canvas.grid()
 
+        self.editedCanvas = None
+
     '''utility functions'''
 
     def saveImage(self, image):
@@ -161,8 +163,9 @@ class Cropper(tk.Tk, CropperMenuBar):
             print("Nothing to undo!")
             return
         self.edited_img = self.undo_cache.pop()
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_img)
         self.canvas.create_image(
-            2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_img)
+            2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_imgTk)
 
     '''Menu stuff'''
 
@@ -303,7 +306,11 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.w = self.image_rect.w
         self.h = self.image_rect.h
         self.region_rect = Rect((0, 0), (self.w, self.h))
+
+        self.edited_img = self.image.copy()
+        
         self.displayimage()
+
 
     def displayimage(self):
         rr = (self.region_rect.left, self.region_rect.top,
@@ -319,19 +326,20 @@ class Cropper(tk.Tk, CropperMenuBar):
             width=(2*self.img_w + 3 * thumboffset),
             height=(self.img_h + 2 * thumboffset))
 
-        # print(self.w)
-        # print(self.photoimage.width())
-        self.edited_img = np.copy(self.photoimage)
-
-        self.undo_cache.append(self.edited_img)
+        self.undo_cache.append(self.edited_img)  # this might duplicate edits
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_img)
 
         self.canvas.create_image(
             thumboffset,
             thumboffset,
             anchor=tk.NW,
             image=self.photoimage)
-        self.canvas.create_image(
-            2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_img)
+
+        if self.editedCanvas is None:
+            self.editedCanvas = self.canvas.create_image(
+                2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_imgTk)
+        else:
+            self.canvas.itemconfig(self.editedCanvas, image=self.edited_imgTk)
 
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
