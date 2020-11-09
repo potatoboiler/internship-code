@@ -9,6 +9,7 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog as tkfd
 
+import cv2 as cv
 import numpy as np
 from PIL import Image, ImageChops, ImageFilter, ImageTk
 
@@ -271,7 +272,20 @@ class Cropper(tk.Tk, CropperMenuBar):
 
     def updateBWT(self, event):
         self.bw_thresh = self.bwThresholdScale.get()
-        # print(self.bw_thresh)
+
+        # please restore this later
+        # self.undo_cache.append(np.copy(self.edited_img))
+
+        self.edited_img = Image.fromarray(cv.threshold(
+            cv.cvtColor(np.array(self.image), cv.COLOR_RGB2BGR),
+            thresh=self.bw_thresh,
+            maxval=255,
+            type=cv.THRESH_BINARY
+        )[1])
+
+        #print(type(self.edited_img))
+
+        self.display_edited()
 
     def init_basic_menu(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
