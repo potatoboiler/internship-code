@@ -308,9 +308,8 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.region_rect = Rect((0, 0), (self.w, self.h))
 
         self.edited_img = self.image.copy()
-        
-        self.displayimage()
 
+        self.displayimage()
 
     def displayimage(self):
         rr = (self.region_rect.left, self.region_rect.top,
@@ -327,7 +326,10 @@ class Cropper(tk.Tk, CropperMenuBar):
             height=(self.img_h + 2 * thumboffset))
 
         self.undo_cache.append(self.edited_img)  # this might duplicate edits
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_img)
+
+        self.edited_imgTk = self.edited_img.crop(rr)
+        self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
 
         self.canvas.create_image(
             thumboffset,
