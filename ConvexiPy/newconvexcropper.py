@@ -321,14 +321,14 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.h = self.image_rect.h
         self.region_rect = Rect((0, 0), (self.w, self.h))
 
-        self.edited_img = self.image.copy()
+        self.edited_img = self.image.copy().convert('RGB')
 
         self.displayimage()
 
-    def displayimage(self):
-        rr = (self.region_rect.left, self.region_rect.top,
-              self.region_rect.right, self.region_rect.bottom)
-        self.image_thumb = self.image.crop(rr)
+    def displayimage(self): # to do: substitute all edited image operations
+        self.rr = (self.region_rect.left, self.region_rect.top,
+                   self.region_rect.right, self.region_rect.bottom)
+        self.image_thumb = self.image.crop(self.rr)
         self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
 
         self.image_thumb_rect = Rect(self.image_thumb.size)
@@ -341,7 +341,7 @@ class Cropper(tk.Tk, CropperMenuBar):
 
         self.undo_cache.append(self.edited_img)  # this might duplicate edits
 
-        self.edited_imgTk = self.edited_img.crop(rr)
+        self.edited_imgTk = self.edited_img.crop(self.rr)
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
         self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
 
@@ -360,6 +360,28 @@ class Cropper(tk.Tk, CropperMenuBar):
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
         self.scale = (x_scale, y_scale)
+        self.redraw_rect()
+
+    def display_edited(self):
+
+        self.undo_cache.append(self.edited_img)  # this might duplicate edits
+
+        self.edited_imgTk = self.edited_img.crop(self.rr)
+        self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
+
+        self.canvas.create_image(
+            thumboffset,
+            thumboffset,
+            anchor=tk.NW,
+            image=self.photoimage)
+
+        if self.editedCanvas is None:
+            self.editedCanvas = self.canvas.create_image(
+                2*thumboffset + self.img_w, thumboffset, anchor=tk.NW, image=self.edited_imgTk)
+        else:
+            self.canvas.itemconfig(self.editedCanvas, image=self.edited_imgTk)
+
         self.redraw_rect()
 
     ''' Rect ops '''
