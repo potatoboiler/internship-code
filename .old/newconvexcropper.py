@@ -23,27 +23,7 @@ thumboffset = 16
 frameoffset = 10
 
 
-class CropperMenuBar(tk.Menu):
-    def __init__(self, master):
-        self.menubar = tk.Menu(self)
-
-    def create_filemenu(self):
-        pass
-
-    def create_editmenu(self):
-        pass
-
-    def create_aboutmenu(self):
-        pass
-
-    def create_guidemenu(self):
-        pass
-
-    def create_toolsmenu(self):
-        pass
-
-
-class Cropper(tk.Tk, CropperMenuBar):
+class Cropper(tk.Tk):
 
     def __init__(self, master=None):
         tk.Tk.__init__(self, master)
@@ -130,10 +110,10 @@ class Cropper(tk.Tk, CropperMenuBar):
             raise FileNotFoundError
 
     def saveOG(self):
-        saveImage(self.original_img)
+        self.saveImage(self.original_img)
 
     def saveED(self):
-        saveImage(self.edited_img)
+        self.saveImage(self.edited_img)
 
     def canvas_mouse1_callback(self, event):
         # print(event.x, event.y)
@@ -265,13 +245,13 @@ class Cropper(tk.Tk, CropperMenuBar):
         self.toolButtons.grid(row=0, column=1)
 
         # add these buttons back in later
-        self.bwDec10.grid(row=0,column=0)
-        self.bwDec5.grid(row=0,column=1)
+        self.bwDec10.grid(row=0, column=0)
+        self.bwDec5.grid(row=0, column=1)
         self.bwDec.grid(row=0, column=2)
         self.bwThresholdScale.grid(row=0, column=3)
         self.bwInc.grid(row=0, column=4)
-        self.bwInc5.grid(row=0,column=5)
-        self.bwInc10.grid(row=0,column=6)
+        self.bwInc5.grid(row=0, column=5)
+        self.bwInc10.grid(row=0, column=6)
 
         self.drawButton.grid(row=0, column=0)
         self.backButton.grid(row=0, column=1)
