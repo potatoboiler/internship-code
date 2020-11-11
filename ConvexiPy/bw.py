@@ -180,7 +180,8 @@ class BW(tk.Tk):
                 self.basicButtons, text='Exit', command=self.quit)
             self.exitButton.grid(row=0, column=1)
         else:
-            self.nextButton = tk.Button(self.basicButtons, text ='Next' '''initiate next stage''')
+            self.nextButton = tk.Button(
+                self.basicButtons, text='Next' '''initiate next stage''')
 
     ''' file ops '''
 
@@ -219,6 +220,12 @@ class BW(tk.Tk):
             width=(2*self.img_w + 3 * thumboffset),
             height=(self.img_h + 2 * thumboffset))
 
+        self.canvas.create_image(
+            thumboffset,
+            thumboffset,
+            anchor=tk.NW,
+            image=self.photoimage)
+
         x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
         y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
         self.scale = (x_scale, y_scale)
@@ -227,12 +234,6 @@ class BW(tk.Tk):
         self.edited_imgTk = self.edited_img.crop(self.rr)
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
         self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
-
-        self.canvas.create_image(
-            thumboffset,
-            thumboffset,
-            anchor=tk.NW,
-            image=self.photoimage)
 
         if self.editedCanvas is None:
             self.editedCanvas = self.canvas.create_image(
