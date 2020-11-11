@@ -57,12 +57,15 @@ class Retouch(tk.Tk):
         # self._frame.grid()
 
     def initCanvas(self):
+        # display reference canvas
         self.canvas = tk.Canvas(self, height=1, width=1)
-        self.drawingcanvas = tk.Canvas(self, height=1, width=1)
+        self.drawingcanvas = tk.Canvas(
+            self, height=1, width=1)  # canvas drawn to
         self.canvas.grid(row=0, column=0)
         self.drawingcanvas.grid(row=0, column=1)
 
         self.drawingcanvas.bind('<Button-1>', self.drawingcanvas_m1cb)
+        self.drawingcanvas.bind('<B1-Motion>', self.drawingcanvas_paint)
 
         # contains canvas image object for edited img
         self.editedCanvas = None
@@ -82,16 +85,32 @@ class Retouch(tk.Tk):
         self.saveImage(self.edited_img)
 
     def drawingcanvas_m1cb(self, event):
-
         self.undo_cache.append(self.edited_img.copy())
-        print(event.x, ' ', event.y)
+        self.drawingcanvas_paint(event)
+
+    def drawingcanvas_paint(self, event):
+        '''draws by updating the underlying edited_img, then pushing to canvas. this is way more expensive than updating canvas and '''
+
+        scaledx, scaledy = (event.x*self.scale[0], event.y*self.scale[1])
+        self.draw_handle.line([scaledx - self.drawsize/2, scaledy - self.drawsize/2,
+                               scaledx + self.drawsize/2, scaledy + self.drawsize/2], fill=self.color, width=self.drawsize)
+
+        self.update_editedTk()
+        self.drawingcanvas.itemconfig(
+            self.editedCanvas, image=self.edited_imgTk)
+        #print(event.x, event.y)
+
+    def update_editedTk(self):
+        self.edited_imgTk = self.edited_img.crop(self.rr)
+        self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
 
     def undo(self):
         if not self.undo_cache:
             print("Nothing to undo!")
             return
         self.edited_img = self.undo_cache.pop()
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_img)
+        self.update_editedTk()
         self.drawingcanvas.itemconfig(
             self.editedCanvas, image=self.edited_imgTk)
 
