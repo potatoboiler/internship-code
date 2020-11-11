@@ -105,6 +105,9 @@ class Retouch(tk.Tk):
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
         self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
 
+        # ensure that drawing functionality is not lost
+        self.draw_handle = ImageDraw.Draw(self.edited_img)
+
     def undo(self):
         if not self.undo_cache:
             print("Nothing to undo!")
