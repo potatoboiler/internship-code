@@ -91,9 +91,12 @@ class Retouch(tk.Tk):
     def drawingcanvas_paint(self, event):
         '''draws by updating the underlying edited_img, then pushing to canvas. this is way more expensive than updating canvas and '''
 
+        # can i perhaps make these class members to eliminate allocation call?
         scaledx, scaledy = (event.x*self.scale[0], event.y*self.scale[1])
-        self.draw_handle.line([scaledx - self.drawsize/2, scaledy - self.drawsize/2,
-                               scaledx + self.drawsize/2, scaledy + self.drawsize/2], fill=self.color, width=self.drawsize)
+        temp = self.drawsize/2
+
+        self.draw_handle.line([scaledx - temp, scaledy - temp,
+                               scaledx + temp, scaledy + temp], fill=self.color, width=self.drawsize)
 
         self.update_editedTk()
         self.drawingcanvas.itemconfig(
