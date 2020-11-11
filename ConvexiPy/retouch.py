@@ -24,8 +24,6 @@ class Retouch(tk.Tk):
         # holds separate menu frames
         self._frame = None
 
-        self.init_base_frame()
-
         self.edited_img = None
         self.undo_cache = list()
 
@@ -39,7 +37,9 @@ class Retouch(tk.Tk):
         else:
             self.image = image
             self.loadimage()
+        self.init_basicbuttons()
 
+        self.color = 'white'
         self.drawsize = 1
 
     '''window initiators'''
@@ -105,7 +105,7 @@ class Retouch(tk.Tk):
         filemenu.add_command(label="Exit", command=self.quit)
         menubar.add_cascade(label="File", menu=filemenu)
 
-    def init_basic_menu(self):
+    def init_basicbuttons(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
 
         self.resetButton = tk.Button(self.basicButtons, text='Reset')
@@ -114,23 +114,10 @@ class Retouch(tk.Tk):
         self.exitButton = tk.Button(
             self.basicButtons, text='Exit', command=self.quit)
 
-        self.basicButtons.grid(row=1, column=2, padx=0)
+        self.basicButtons.grid(row=1)
         self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
         self.exitButton.grid(row=0, column=4)
-
-    '''frames'''
-
-    def first_menu_step(self):
-        '''destroys current tool frame, attaches basic menu steps'''
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = tk.Frame(self)
-        self.init_basic_menu()
-
-    def init_base_frame(self):
-        '''basic menu, created upon startup and navigates to others'''
-        self.first_menu_step()
 
     ''' file ops '''
 
