@@ -13,3 +13,4 @@ tkinterplay.py
 *.tiff
 *.pyc
 ConvexiPy/__pycache__/rect.cpython-38.pyc
+test.py
