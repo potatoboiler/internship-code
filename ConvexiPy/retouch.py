@@ -44,6 +44,8 @@ class Retouch(tk.Tk):
         self.thickness_sv = tk.StringVar()  # used for thickness display
         self.thickness_sv.set(self.drawsize)
 
+        self.init_drawbuttons()
+
     '''window initiators'''
 
     def init_menu_bar(self):
