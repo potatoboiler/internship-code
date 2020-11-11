@@ -79,6 +79,10 @@ class BW(tk.Tk):
     def saveED(self):
         self.saveImage(self.edited_img)
 
+    def passNext(self):
+        self.edited_img.save(('temp' + self.extension()))
+        self.quit()
+
     '''Menu stuff'''
 
     def create_filemenu(self, menubar):
@@ -185,7 +189,8 @@ class BW(tk.Tk):
             self.exitButton.grid(row=0, column=1)
         else:
             self.nextButton = tk.Button(
-                self.basicButtons, text='Next' '''initiate next stage''')
+                self.basicButtons, text='Next', command=self.passNext)
+            self.nextButton.grid(row=0, column=1)
 
     ''' file ops '''
 

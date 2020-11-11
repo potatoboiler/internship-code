@@ -124,6 +124,10 @@ class Retouch(tk.Tk):
         self.drawingcanvas.itemconfig(
             self.editedCanvas, image=self.edited_imgTk)
 
+    def passNext(self):
+        self.edited_img.save('temp' + self.extension())
+        self.quit()
+
     '''Menu stuff'''
 
     def create_filemenu(self, menubar):
@@ -144,12 +148,15 @@ class Retouch(tk.Tk):
         self.exitButton = tk.Button(
             self.basicButtons, text='Exit', command=self.quit)
         self.saveButton = tk.Button(
-            self.basicButtons, text='Save BW', command=self.saveED)
+            self.basicButtons, text='Save edited', command=self.saveED)
+
+        if __name__ != '__main__':
+            self.exitButton.config(text='Next', command=self.passNext)
 
         self.basicButtons.grid(row=1, column=1)
 
         self.saveButton.grid(row=0, column=0)
-        self.resetButton.grid(row=0, column=1)
+#        self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
         self.exitButton.grid(row=0, column=4)
 
