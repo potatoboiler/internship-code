@@ -159,6 +159,22 @@ class Retouch(tk.Tk):
             command=self.updateBWT)
         self.thicknessScale.set(self.drawsize)
 
+        self.colorButtons = tk.LabelFrame(self._frame, text='Colors')
+        self.blackButton = tk.LabelFrame(
+            self._frame, text='Black', command=self.makeBlack)
+        self.whiteButton = tk.LabelFrame(
+            self._frame, text='White', command=self.makeWhite, relief=tk.SUNKEN, state='disabled')
+
+    def makeBlack(self):
+        self.color = 'black'
+        self.whiteButton.config(state='normal', relief=tk.FLAT)
+        self.blackButton.config(state='disabled', relief=tk.SUNKEN)
+
+    def makeWhite(self):
+        self.color = 'white'
+        self.whiteButton.config(state='disabled', relief=tk.SUNKEN)
+        self.blackButton.config(state='normal', relief=tk.FLAT)
+
     def updateThickness(self, event):
         self.thickness_sv.set(self.drawsize := self.thicknessScale.get())
 
