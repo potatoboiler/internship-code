@@ -1,14 +1,19 @@
 import os
 
 import cv2 as cv
-import matlab
-import matlab.engine
 import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image
 from scipy import spatial
 
-eng = matlab.engine.start_matlab()
+try:
+    import matlab
+    import matlab.engine
+    eng = matlab.engine.start_matlab()
+except:
+    print('no matlab installation present')
+
+disableMATLABcomponents = True
 
 
 def load_image(infilename) -> np.ndarray:
@@ -51,5 +56,3 @@ def convMATLAB(binimg: np.ndarray):
     Argument of computeconvex is numpy matrix of pixels converted to a MATLAB array
     """
     return eng.computeconvex(matlab.uint16(np.ndarray.tolist(binimg)))
-
-
