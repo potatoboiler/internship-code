@@ -40,7 +40,9 @@ class Retouch(tk.Tk):
         self.init_basicbuttons()
 
         self.color = 'white'
-        self.drawsize = 1
+        self.drawsize = 3
+        self.thickness_sv = tk.StringVar()  # used for thickness display
+        self.thickness_sv.set(self.drawsize)
 
     '''window initiators'''
 
@@ -143,6 +145,22 @@ class Retouch(tk.Tk):
         self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
         self.exitButton.grid(row=0, column=4)
+
+    def init_drawbuttons(self):
+        self.drawButtons = tk.LabelFrame(self._frame, text='Drawing tools')
+
+        self.thickChange = tk.LabelFrame(
+            self.drawButtons, text='Thickness settings')
+        self.thicknessScale = tk.Scale(
+            master=self.thickChange,
+            from_=0, to=20,
+            orient=tk.HORIZONTAL,
+            label='Thickness',
+            command=self.updateBWT)
+        self.thicknessScale.set(self.drawsize)
+
+    def updateThickness(self, event):
+        self.thickness_sv.set(self.drawsize := self.thicknessScale.get())
 
     ''' file ops '''
 
