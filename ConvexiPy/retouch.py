@@ -17,7 +17,7 @@ frameoffset = 10
 
 class Retouch(tk.Tk):
 
-    def __init__(self, master=None, image=None):
+    def __init__(self, master=None, image=None, filename=None):
         tk.Tk.__init__(self, master)
         self.grid()
         self.initCanvas()
@@ -35,10 +35,11 @@ class Retouch(tk.Tk):
 
         if __name__ == '__main__' or image is None:
             self.getFile()
-            self.loadimage()
         else:
             self.image = image
-            self.loadimage()
+            self.filename = filename
+        self.loadimage()
+
         self.init_basicbuttons()
 
         self.color = 'white'
