@@ -71,12 +71,17 @@ class Retouch(tk.Tk):
 
     '''utility functions'''
 
+    def extension(self):
+        # print(self.filename)
+        e = os.path.splitext(self.filename)[1]
+        return e
+
     def saveImage(self, image):
         if image is not None:
-            filename = tkfd.asksaveasfilename()
-            file = open(image, mode='a')
-            file.write(filename)
-            file.close()
+            filename = tkfd.asksaveasfilename(filetypes=[(
+                'Image Files', '.jpg .JPG .jpeg .JPEG .png .PNG .tif .TIF .tiff .TIFF'), ('TIFF Image Files', '.tif .TIF .tiff .TIFF')])
+            filename += self.extension()
+            self.edited_img.save(filename)
         else:
             raise FileNotFoundError
 
