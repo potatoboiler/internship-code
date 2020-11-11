@@ -8,7 +8,7 @@ import cv2 as cv
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageTk
 
 import convexity as conv
-from croppertk import *
+from croppertk import Cropper
 from rect import Rect
 
 font = ImageFont.truetype("arial.ttf", size=26)
