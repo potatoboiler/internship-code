@@ -108,6 +108,11 @@ class Retouch(tk.Tk):
         # ensure that drawing functionality is not lost
         self.draw_handle = ImageDraw.Draw(self.edited_img)
 
+    def reset(self):
+        self.undo_cache.append(self.edited_img.copy())
+        self.edited_img = self.image.copy().convert('RGB')
+        self.update_editedTk
+
     def undo(self):
         if not self.undo_cache:
             print("Nothing to undo!")
@@ -130,13 +135,18 @@ class Retouch(tk.Tk):
     def init_basicbuttons(self):
         self.basicButtons = tk.LabelFrame(self._frame, text='Basics')
 
-        self.resetButton = tk.Button(self.basicButtons, text='Reset')
+        self.resetButton = tk.Button(
+            self.basicButtons, text='Reset', command=self.reset)
         self.undoButton = tk.Button(
             self.basicButtons, text='Undo', command=self.undo)
         self.exitButton = tk.Button(
             self.basicButtons, text='Exit', command=self.quit)
+        self.saveButton = tk.Button(
+            self.basicButtons, text='Save BW', command=self.saveED)
 
-        self.basicButtons.grid(row=1)
+        self.basicButtons.grid(row=1, column=1)
+
+        self.saveButton.grid(row=0, column=0)
         self.resetButton.grid(row=0, column=1)
         self.undoButton.grid(row=0, column=2)
         self.exitButton.grid(row=0, column=4)
