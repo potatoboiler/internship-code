@@ -62,9 +62,9 @@ class ConvexCropper(Cropper):
         # og_filename i think is the base of the name of the original file
         self.og_filename = os.path.splitext(self.filename.split('/')[-1])[0]
         self.extension = os.path.splitext(self.filename.split('/')[-1])[-1]
-        print(self.extension, '   extension')
+        # print(self.extension, '   extension')
         self.newdir = os.path.join(
-            os.getcwd() + os.sep + 'crops_' + self.og_filename + os.sep)
+            os.getcwd() + os.sep + 'output' + os.sep + 'crops_' + self.og_filename + os.sep)
         try:
             os.makedirs(self.newdir)
         except:
@@ -75,12 +75,14 @@ class ConvexCropper(Cropper):
         for croparea in self.crop_rects:
             cropcount += 1
             f = self.newfilename(cropcount)
-            #print(f, croparea)
+            # print(f, croparea)
             self.crop(croparea, f)
 
         # write image
         self.image.save(os.path.join(
             os.getcwd() + os.sep + 'convex_' + self.og_filename + self.extension))
+
+        self.output()
 
         self.quit()
 
