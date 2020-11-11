@@ -22,7 +22,8 @@ class Retouch(tk.Tk):
         self.initCanvas()
 
         # holds separate menu frames
-        self._frame = None
+        self._frame = tk.Frame(master=self)
+        self._frame.grid(row=1, column=1)
 
         self.edited_img = None
         self.undo_cache = list()
@@ -51,14 +52,6 @@ class Retouch(tk.Tk):
     def init_menu_bar(self):
         self.menubar = tk.Menu(master=self)
         self.create_filemenu(menubar=self.menubar)
-
-    def switch_frame(self, frameobj, *args, **kwargs):
-        # idk if kwargs will pass its items or itself
-        new_frame = frameobj(self, **kwargs)
-        if self._frame is not None:
-            self._frame.destroy()
-        #self._frame = new_frame
-        # self._frame.grid()
 
     def initCanvas(self):
         # display reference canvas
