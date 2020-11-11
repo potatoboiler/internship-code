@@ -105,7 +105,7 @@ class Retouch(tk.Tk):
     def update_editedTk(self):
         self.edited_imgTk = self.edited_img.crop(self.rr)
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk,master=self)
 
         # ensure that drawing functionality is not lost
         self.draw_handle = ImageDraw.Draw(self.edited_img)
@@ -230,7 +230,7 @@ class Retouch(tk.Tk):
         # size of this is size of downscaled image
         self.image_thumb_rect = Rect(self.image_thumb.size)
 
-        self.photoimage = ImageTk.PhotoImage(self.image_thumb)
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb,master=self)
         self.img_w, self.img_h = self.image_thumb.size
 
         self.canvas.configure(

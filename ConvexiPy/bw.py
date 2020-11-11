@@ -218,7 +218,7 @@ class BW(tk.Tk):
 
         self.image_thumb_rect = Rect(self.image_thumb.size)
 
-        self.photoimage = ImageTk.PhotoImage(self.image_thumb)
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb, master=self)
         self.img_w, self.img_h = self.image_thumb.size
         self.canvas.configure(
             width=(2*self.img_w + 3 * thumboffset),
@@ -237,7 +237,7 @@ class BW(tk.Tk):
     def display_edited(self):
         self.edited_imgTk = self.edited_img.crop(self.rr)
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk, master=self)
 
         if self.editedCanvas is None:
             self.editedCanvas = self.canvas.create_image(
