@@ -158,14 +158,23 @@ class Retouch(tk.Tk):
             from_=0, to=20,
             orient=tk.HORIZONTAL,
             label='Thickness',
-            command=self.updateBWT)
+            command=self.updateThickness)
         self.thicknessScale.set(self.drawsize)
 
         self.colorButtons = tk.LabelFrame(self._frame, text='Colors')
-        self.blackButton = tk.LabelFrame(
+        self.blackButton = tk.Button(
             self._frame, text='Black', command=self.makeBlack)
-        self.whiteButton = tk.LabelFrame(
+        self.whiteButton = tk.Button(
             self._frame, text='White', command=self.makeWhite, relief=tk.SUNKEN, state='disabled')
+
+        self.drawButtons.grid(row=1, column=0)
+        self.thickChange.grid(column=0)
+        self.colorButtons.grid(column=1)
+
+        self.thicknessScale.grid()
+
+        self.blackButton.grid(column=0)
+        self.whiteButton.grid(column=1)
 
     def makeBlack(self):
         self.color = 'black'
