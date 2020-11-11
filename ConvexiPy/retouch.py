@@ -171,7 +171,7 @@ class Retouch(tk.Tk):
             self.colorButtons, text='White', command=self.makeWhite, relief=tk.SUNKEN, state='disabled')
 
         self.drawButtons.grid(row=1, column=0)
-        self.thickChange.grid(row=1,column=0)
+        self.thickChange.grid(row=1, column=0)
         self.colorButtons.grid(row=1, column=1)
 
         self.thicknessScale.grid()
