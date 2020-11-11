@@ -195,9 +195,7 @@ class Retouch(tk.Tk):
         self.scale = (x_scale, y_scale)
 
     def display_edited(self):
-        self.edited_imgTk = self.edited_img.crop(self.rr)
-        self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk)
+        self.update_editedTk()
 
         self.drawingcanvas.configure(
             width=(self.img_w + thumboffset),
