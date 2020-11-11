@@ -113,7 +113,7 @@ class Retouch(tk.Tk):
     def reset(self):
         self.undo_cache.append(self.edited_img.copy())
         self.edited_img = self.image.copy().convert('RGB')
-        self.update_editedTk
+        self.display_edited()
 
     def undo(self):
         if not self.undo_cache:
