@@ -92,8 +92,8 @@ class Retouch(tk.Tk):
         scaledx, scaledy = (event.x*self.scale[0], event.y*self.scale[1])
         temp = self.drawsize/2
 
-        self.draw_handle.line([scaledx - temp, scaledy - temp,
-                               scaledx + temp, scaledy + temp], fill=self.color, width=self.drawsize)
+        self.draw_handle.ellipse([scaledx - temp, scaledy - temp,
+                                  scaledx + temp, scaledy + temp], fill=self.color, width=self.drawsize)
 
         self.update_editedTk()
         self.drawingcanvas.itemconfig(
