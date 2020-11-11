@@ -187,7 +187,8 @@ class Retouch(tk.Tk):
         self.blackButton.config(state='normal', relief=tk.FLAT)
 
     def updateThickness(self, event):
-        self.thickness_sv.set(self.drawsize := self.thicknessScale.get())
+        self.drawsize = self.thicknessScale.get()
+        self.thickness_sv.set(self.drawsize)
 
     ''' file ops '''
 
