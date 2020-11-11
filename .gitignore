@@ -14,3 +14,6 @@ tkinterplay.py
 *.pyc
 ConvexiPy/__pycache__/rect.cpython-38.pyc
 test.py
+
+# will get reinstated later
+*cropbase.py
