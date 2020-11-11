@@ -17,6 +17,43 @@ disableMATLABcomponents = True
 
 
 class ConvexCropper(Cropper):
+    def __init__(self, master=None, image=None, filename=None):
+        tk.Tk.__init__(self, master)
+        self.initCanvas()
+        self.grid()
+        self.utilButtons()
+
+        # crop area
+        self.croprect_start = None
+        self.croprect_end = None
+
+        # various rectangles
+        self.canvas_rects = []  # drawn rects on image
+        self.crop_rects = []  # crop areas
+        self.region_rect = []  # zoom windows
+        self.current_rect = None
+
+        # just some mode trackers
+        self.zoommode = False  # ??
+        self.countour = False  # ??
+        self.acbwmode = False  # black/white
+        self.zooming = False  # ??
+
+        # properties used for cropping
+        self.w = 1
+        self.h = 1
+        self.x0 = 0
+        self.y0 = 0
+        self.n = 0
+
+        # file loading
+        if __name__ == '__main__' or image is None:
+            self.getFile()
+        else:
+            self.image = image
+            self.filename = filename
+        self.loadimage()
+
     def start_cropping(self):
         cropcount = 0
         # used for writing text onto image

@@ -18,12 +18,16 @@ frameoffset = 10
 
 class BW(tk.Tk):
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, image=None, filename=None):
         tk.Tk.__init__(self, master)
         self.grid()
         self.initCanvas()
 
-        self.getFile()
+        if __name__ == '__main__' or image is None:
+            self.getFile()
+        else:
+            self.image = image.copy()
+            self.filename = filename
         self.loadimage()
 
         self.bw_thresh = 127
