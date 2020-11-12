@@ -59,5 +59,9 @@ def convPython(binimg: np.ndarray):
     """
     Python equivalent of convMATLAB(), returns area and convhull as bool np.ndarray
     """
-    chull = convex_hull_image(binimg)
-    return np.ndarray.sum(chull), chull
+    try: 
+        from skimage.morphology import convex_hull_image
+        chull = convex_hull_image(binimg)
+        return np.ndarray.sum(chull), chull
+    except:
+        return 1, np.array([1])
