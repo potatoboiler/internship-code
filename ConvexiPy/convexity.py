@@ -6,14 +6,15 @@ from matplotlib import pyplot as plt
 from PIL import Image
 from scipy import spatial
 
+disableMATLABcomponents = False
+
 try:
     import matlab
     import matlab.engine
     eng = matlab.engine.start_matlab()
 except:
     print('no matlab installation present')
-
-disableMATLABcomponents = True
+    disableMATLABcomponents = True
 
 
 def load_image(infilename) -> np.ndarray:
