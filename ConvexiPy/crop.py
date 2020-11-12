@@ -81,11 +81,43 @@ class ConvexCropper(Cropper):
 
         # write image
         self.image.save(os.path.join(
-            os.getcwd() + os.sep + 'convex_' + self.og_filename + self.extension))
+            self.newdir + os.sep + 'convex_' + self.og_filename + self.extension))
 
         self.output()
-
+        try:
+            os.remove('temp' + self.extension)
+        except:
+            print('lol')
         self.quit()
+
+    def displayimage(self):
+        rr = (self.region_rect.left, self.region_rect.top,
+              self.region_rect.right, self.region_rect.bottom)
+        self.image_thumb = self.image.crop(rr)
+
+        self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
+        if self.countour:
+            self.image_thumb = self.image_thumb.filter(ImageFilter.CONTOUR)
+
+        self.image_thumb_rect = Rect(self.image_thumb.size)
+
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb, master=self)
+        w, h = self.image_thumb.size
+        self.canvas.configure(
+            width=(w + 2 * thumboffset),
+            height=(h + 2 * thumboffset))
+
+        self.canvas.create_image(
+            thumboffset,
+            thumboffset,
+            anchor=tk.NW,
+            image=self.photoimage)
+
+        x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
+        y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
+        self.scale = (x_scale, y_scale)
+        self.redraw_rect()
+        self.set_button_state()
 
     def crop(self, croparea, filename):
         # save crop
