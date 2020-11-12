@@ -129,8 +129,8 @@ class ConvexCropper(Cropper):
         ret, thresh = cv.threshold(
             cv.imread(filename, 0), 127, 255, cv.THRESH_BINARY)
 
-        convexity = conv.ptCount(
-            thresh) / conv.convMATLAB(thresh)[0] if not disableMATLABcomponents else 0
+        convexity = np.ndarray.sum(thresh) / conv.convMATLAB(thresh)[
+            0] if not disableMATLABcomponents else conv.ptCount(thresh) / conv.convPython(thresh)[0]
 
         self.draw.text((croparea.left, croparea.top),
                        text=str(round(convexity, ndigits=4)),
@@ -162,21 +162,21 @@ class ConvexCropper(Cropper):
                     # thresh = nd array of binary image, ret is not used
                     ret, thresh = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
 
-                    
                     # write binarized image to disk
                     f, e = os.path.splitext(str(file))
                     filename = f + '_bin' + e
                     filepath = os.path.join(self.newdir, filename)
                     cv.imwrite(filepath, thresh)
 
-                    if not conv.disableMATLABcomponents:
-                        # write stats to csv
-                        agg_area = conv.ptCount(thresh)  # aggregate area
-                        print("projected area: ", agg_area)
-                        conv_area = conv.convMATLAB(thresh)  # convex hull area
-                        print("convex area: ", conv_area)
-                        w2csv.writerow(
-                            [filename, agg_area/conv_area, agg_area, conv_area])
+                    # write stats to csv
+                    agg_area = conv.ptCount(thresh)  # aggregate area
+                    print("projected area: ", agg_area)
+                    conv_area = conv.convPython(thresh)[
+                        0] if conv.disableMATLABcomponents else conv.convMATLAB(thresh)[0]  # convex hull area
+                    print("convex area: ", conv_area)
+                    w2csv.writerow(
+                        [filename, agg_area/conv_area, agg_area, conv_area])
+
 
 if __name__ == '__main__':
     imgexts = ['jpg', 'tif', 'png', 'bmp']
