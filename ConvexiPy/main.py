@@ -12,6 +12,7 @@ file = tkfd.askopenfile(mode='rb', filetypes=[
     ('TIFF Image Files', '.tif .TIF .tiff .TIFF')
 ])
 image = Image.open(file)
+photoimage = image.copy()
 filename = file.name
 extension = os.path.splitext(filename)[1]
 print(extension)
@@ -24,5 +25,5 @@ root = Retouch(image=image, filename=filename)
 root.mainloop()
 
 image = Image.open('temp' + extension)
-root = ConvexCropper(image=image, filename=filename)
+root = ConvexCropper(image=image, filename=filename, photoimage=photoimage)
 root.mainloop()
