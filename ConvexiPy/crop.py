@@ -1,12 +1,10 @@
 import csv
 import os
-import sys
 import tkinter as tk
-from pathlib import Path
-from tkinter import filedialog as tkfd
 
 import cv2 as cv
-from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageTk
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageTk
 
 import convexity as conv
 from croppertk import Cropper
