@@ -13,6 +13,9 @@ from rect import Rect
 font = ImageFont.truetype("arial.ttf", size=26)
 disableMATLABcomponents = True
 
+thumbsize = 896, 608
+thumboffset = 16
+
 
 class ConvexCropper(Cropper):
     def __init__(self, master=None, image=None, filename=None):
