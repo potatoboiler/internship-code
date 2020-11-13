@@ -25,5 +25,5 @@ root = Retouch(image=image, filename=filename)
 root.mainloop()
 
 image = Image.open('temp' + extension)
-root = ConvexCropper(image=image, filename=filename, photoimage=photoimage)
+root = ConvexCropper(image=image, filename=filename)
 root.mainloop()
