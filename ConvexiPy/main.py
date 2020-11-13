@@ -15,14 +15,16 @@ image = Image.open(file)
 photoimage = image.copy()
 filename = file.name
 extension = os.path.splitext(filename)[1]
-print(extension)
+# print(extension)
 
 root = BW(image=image, filename=filename)
 root.mainloop()
+root.destroy()
 
 image = Image.open('temp' + extension)
 root = Retouch(image=image, filename=filename)
 root.mainloop()
+root.destroy()
 
 image = Image.open('temp' + extension)
 root = ConvexCropper(image=image, filename=filename)
