@@ -169,7 +169,8 @@ class ConvexCropper(Cropper):
                 f, e = os.path.splitext(str(file))
                 filename = f + '_bin' + e
                 filepath = os.path.join(self.newdir, filename)
-                cv.imwrite(filepath, thresh)
+                if __name__ == '__main__':
+                    cv.imwrite(filepath, thresh)
 
                 # write stats to csv
                 agg_area = conv.ptCount(thresh)  # aggregate area
