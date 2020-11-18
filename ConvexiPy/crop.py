@@ -16,6 +16,8 @@ disableMATLABcomponents = True
 thumbsize = 896, 608
 thumboffset = 16
 
+imgexts = ['jpg', 'tif', 'png', 'bmp']
+
 
 class ConvexCropper(Cropper):
     def __init__(self, master=None, image=None, filename=None):
