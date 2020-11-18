@@ -17,10 +17,12 @@ frameoffset = 10
 
 class Retouch(tk.Tk):
 
-    def __init__(self, master=None, image=None, filename=None):
+    def __init__(self, master=None, image=None, filename=None, photoimage=None):
         tk.Tk.__init__(self, master)
         self.grid()
         self.initCanvas()
+
+        self.ext_pi = None
 
         # holds separate menu frames
         self._frame = tk.Frame(master=self)
@@ -39,6 +41,12 @@ class Retouch(tk.Tk):
             self.image = image
             self.filename = filename
         self.loadimage()
+        
+        if photoimage is not None:
+            self.ext_pi = photoimage.copy()
+        else:
+            self.ext_pi = None
+        self.displayimage()
 
         self.init_basicbuttons()
 
@@ -110,7 +118,7 @@ class Retouch(tk.Tk):
     def update_editedTk(self):
         self.edited_imgTk = self.edited_img.crop(self.rr)
         self.edited_imgTk.thumbnail(thumbsize, Image.ANTIALIAS)
-        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk,master=self)
+        self.edited_imgTk = ImageTk.PhotoImage(self.edited_imgTk, master=self)
 
         # ensure that drawing functionality is not lost
         self.draw_handle = ImageDraw.Draw(self.edited_img)
@@ -235,14 +243,17 @@ class Retouch(tk.Tk):
     def displayimage(self):  # to do: substitute all edited image operations
         # size of original image
         self.rr = (self.region_rect.left, self.region_rect.top,
-                   self.region_rect.right, self.region_rect.bottom)
-        self.image_thumb = self.image.crop(self.rr)
+                   self.region_rect.right, self.region_rect.bottom)       
+        if self.ext_pi is not None:
+            self.image_thumb = self.ext_pi.crop(self.rr)
+        else:
+            self.image_thumb = self.image.crop(self.rr)
         self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
 
         # size of this is size of downscaled image
         self.image_thumb_rect = Rect(self.image_thumb.size)
 
-        self.photoimage = ImageTk.PhotoImage(self.image_thumb,master=self)
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb, master=self)
         self.img_w, self.img_h = self.image_thumb.size
 
         self.canvas.configure(
