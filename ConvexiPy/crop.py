@@ -90,7 +90,6 @@ class ConvexCropper(Cropper):
             os.remove('temp' + self.extension)
         except:
             print('lol')
-        self.quit()
 
     def displayimage(self):
         rr = (self.region_rect.left, self.region_rect.top,
@@ -131,6 +130,7 @@ class ConvexCropper(Cropper):
         ret, thresh = cv.threshold(
             cv.imread(filename, 0), 127, 255, cv.THRESH_BINARY)
 
+        # write to a map attached to self with key: filename,
         convexity = np.ndarray.sum(thresh) / conv.convMATLAB(thresh)[
             0] if not disableMATLABcomponents else conv.ptCount(thresh) / conv.convPython(thresh)[0]
 
@@ -143,7 +143,7 @@ class ConvexCropper(Cropper):
         imgexts = ['jpg', 'tif', 'png', 'bmp']
 
         # creates UI object from which file is selected and crops are perfroemd
-        
+
         # directory where output images are stored
         crops = os.listdir(self.newdir)
 
