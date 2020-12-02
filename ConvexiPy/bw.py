@@ -113,7 +113,7 @@ class BW(tk.Tk):
         self.bwThresholdScale.set(self.bw_thresh)
 
         self.bwInc = tk.Button(
-            self.bwToolsFrame, text='+1', command=self.incBWT5)
+            self.bwToolsFrame, text='+1', command=self.incBWT)
         self.bwInc5 = tk.Button(
             self.bwToolsFrame, text='+5', command=self.incBWT5)
         self.bwInc10 = tk.Button(
