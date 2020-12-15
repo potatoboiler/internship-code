@@ -10,11 +10,7 @@ tkinterplay.py
 *.csv
 *.pyc
 *.png
-*.tiff
-*.pyc
-ConvexiPy/__pycache__/rect.cpython-38.pyc
 test.py
-
-# get reinstated later maybe
+*.pyc
+*.tiff
 *cropbase.py
-todo.md
