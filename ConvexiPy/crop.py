@@ -20,9 +20,11 @@ import convexity as conv
 from croppertk import Cropper
 from rect import Rect
 
-font = ImageFont.truetype("arial.ttf", size=26)
-disableMATLABcomponents = True
-
+font = None
+if platform.system() == 'Darwin':
+    font = ImageFont.truetype("/Library/Fonts/Arial Unicode.ttf", size=26)
+else:
+    font = ImageFont.truetype("arial.ttf", size=26)
 thumbsize = 896, 608
 thumboffset = 16
 
