@@ -79,6 +79,52 @@ class ConvexCropper(Cropper):
             self.filename = filename
         self.loadimage()
 
+    # Overrides utilButtons() from cropper-tk
+
+    def utilButtons(self):
+        super().utilButtons()
+        # reuse countourbutton, which is useless
+        self.countourButton.config(
+            text="Substrate?",
+            command=self.substrateButton
+        )
+
+    def substrateButton(self):
+        if self.substrate:
+            self.substrate = False
+        else:
+            self.substrate = True
+
+    def displayimage(self):
+        ''' Creates a copy of the loaded image, and crops the copy, to display onto the canvas. The original image is preserved. The size parameters thumbsize may be changed through the thumbsize tuple at the top of the file. '''
+        rr = (self.region_rect.left, self.region_rect.top,
+              self.region_rect.right, self.region_rect.bottom)
+        self.image_thumb = self.image.crop(rr)
+
+        self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
+        if self.countour:
+            self.image_thumb = self.image_thumb.filter(ImageFilter.CONTOUR)
+
+        self.image_thumb_rect = Rect(self.image_thumb.size)
+
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb, master=self)
+        w, h = self.image_thumb.size
+        self.canvas.configure(
+            width=(w + 2 * thumboffset),
+            height=(h + 2 * thumboffset))
+
+        self.canvas.create_image(
+            thumboffset,
+            thumboffset,
+            anchor=tk.NW,
+            image=self.photoimage)
+
+        x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
+        y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
+        self.scale = (x_scale, y_scale)
+        self.redraw_rect()
+        self.set_button_state()
+
     def start_cropping(self):
         ''' Begins the cropping purpose'''
         cropcount = 0
@@ -130,51 +176,6 @@ class ConvexCropper(Cropper):
         exitlabel = tk.Label(
             master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
         exitlabel.grid()
-
-    # Overrides utilButtons() from cropper-tk
-    def utilButtons(self):
-        super().utilButtons()
-        # reuse countourbutton, which is useless
-        self.countourButton.config(
-            text="Substrate?",
-            command=self.substrateButton
-        )
-
-    def substrateButton(self):
-        if self.substrate:
-            self.substrate = False
-        else:
-            self.substrate = True
-
-    def displayimage(self):
-        ''' Creates a copy of the loaded image, and crops the copy, to display onto the canvas. The original image is preserved. The size parameters thumbsize may be changed through the thumbsize tuple at the top of the file. '''
-        rr = (self.region_rect.left, self.region_rect.top,
-              self.region_rect.right, self.region_rect.bottom)
-        self.image_thumb = self.image.crop(rr)
-
-        self.image_thumb.thumbnail(thumbsize, Image.ANTIALIAS)
-        if self.countour:
-            self.image_thumb = self.image_thumb.filter(ImageFilter.CONTOUR)
-
-        self.image_thumb_rect = Rect(self.image_thumb.size)
-
-        self.photoimage = ImageTk.PhotoImage(self.image_thumb, master=self)
-        w, h = self.image_thumb.size
-        self.canvas.configure(
-            width=(w + 2 * thumboffset),
-            height=(h + 2 * thumboffset))
-
-        self.canvas.create_image(
-            thumboffset,
-            thumboffset,
-            anchor=tk.NW,
-            image=self.photoimage)
-
-        x_scale = float(self.region_rect.w) / self.image_thumb_rect.w
-        y_scale = float(self.region_rect.h) / self.image_thumb_rect.h
-        self.scale = (x_scale, y_scale)
-        self.redraw_rect()
-        self.set_button_state()
 
     def crop(self, croparea, filename):
         ''' Given a region of the original image and a filename, generates image crop from original '''
