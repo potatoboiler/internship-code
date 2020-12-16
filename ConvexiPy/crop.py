@@ -60,6 +60,7 @@ class ConvexCropper(Cropper):
         self.zooming = False  # ??
 
         # checks if substrate is presnet
+        self.substrate = False
 
         # properties used for cropping
         # these variables aren't being used for any functionality, but removing these will break stuff
@@ -122,6 +123,20 @@ class ConvexCropper(Cropper):
 
         # Once computation is done, prints this affirmative dialog box
     # Overrides utilButtons() from cropper-tk
+    def utilButtons(self):
+        super().utilButtons()
+        # reuse countourbutton, which is useless
+        self.countourButton.config(
+            text="Substrate?",
+            command=self.substrateButton
+        )
+
+    def substrateButton(self):
+        if self.substrate:
+            self.substrate = False
+        else:
+            self.substrate = True
+
     def displayimage(self):
         ''' Creates a copy of the loaded image, and crops the copy, to display onto the canvas. The original image is preserved. The size parameters thumbsize may be changed through the thumbsize tuple at the top of the file. '''
         rr = (self.region_rect.left, self.region_rect.top,
