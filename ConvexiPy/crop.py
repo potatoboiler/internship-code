@@ -45,6 +45,7 @@ class ConvexCropper(Cropper):
         # will be used to store values for cropped region properties, but is not currently implemented
         # consolidating everything into these variables will stop double computation, but I have not gone through this yet
         # stores variables as list {key: (image, (coordinates), (aggregate area, convex area, convexity))}
+        self.cropped_bits = []
 
         # various rectangles
         self.canvas_rects = []  # drawn rects on image
@@ -96,7 +97,8 @@ class ConvexCropper(Cropper):
         # Otherwise, a common working directory might be C:\Users\<username> on Windows, or the Home folder on MacOS.
         # If on Linux, this may be the ~/ directory
         self.newdir = os.path.join(
-            os.getcwd() + os.sep + 'output' + os.sep + 'crops_' + self.og_filename + os.sep)
+            os.getcwd() + os.sep + 'output' + os.sep + 'crops_' + self.og_filename + os.sep
+        )
         try:
             os.makedirs(self.newdir)
         except:
@@ -187,6 +189,7 @@ class ConvexCropper(Cropper):
 
         # need to write to a dictionary attached to self with { key: filename } as pairs
         # computes convexity and writes it onto original image
+        convexity = conv.ptCount(thresh) / conv.convPython(thresh)[0]
 
         self.draw.text((croparea.left, croparea.top),
                        text=str(round(convexity, ndigits=4)),
@@ -211,7 +214,7 @@ class ConvexCropper(Cropper):
                 ['filename', 'convexity', 'aggregate area', 'convex area'])
 
             for file in crops:
-                if "_bin." in file:
+                if any(s in file for s in ["_bin.", ".csv", "convex-"]):
                     continue
                 # read image from dir
                 img = cv.imread(os.path.join(self.newdir, file), 0)
