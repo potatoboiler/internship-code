@@ -207,11 +207,10 @@ class ConvexCropper(Cropper):
                 # write stats to csv
                 agg_area = conv.ptCount(thresh)  # aggregate area
                 print("projected area: ", agg_area)
-                conv_area = conv.convPython(thresh)[
-                    0] if conv.disableMATLABcomponents else conv.convMATLAB(thresh)[0]  # convex hull area
+                conv_area = conv.convPython(thresh)[0]  # convex hull area
                 print("convex area: ", conv_area)
                 w2csv.writerow(
-                    [str(filename), str(agg_area/conv_area), str(agg_area), str(conv_area)])
+                    [filename, agg_area/conv_area, agg_area, conv_area])
 
 
 if __name__ == '__main__':
