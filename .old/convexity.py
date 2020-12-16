@@ -1,16 +1,14 @@
+import os
+
+import cv2 as cv
+import matlab
+import matlab.engine
 import numpy as np
+from matplotlib import pyplot as plt
 from PIL import Image
-from skimage.morphology import convex_hull_image
+from scipy import spatial
 
-disableMATLABcomponents = False
-
-try:
-    import matlab
-    import matlab.engine
-    eng = matlab.engine.start_matlab()
-except:
-    print('no matlab installation present')
-    disableMATLABcomponents = True
+eng = matlab.engine.start_matlab()
 
 
 def load_image(infilename) -> np.ndarray:
@@ -55,13 +53,3 @@ def convMATLAB(binimg: np.ndarray):
     return eng.computeconvex(matlab.uint16(np.ndarray.tolist(binimg)))
 
 
-def convPython(binimg: np.ndarray):
-    """
-    Python equivalent of convMATLAB(), returns area and convhull as bool np.ndarray
-    """
-    try: 
-        from skimage.morphology import convex_hull_image
-        chull = convex_hull_image(binimg)
-        return np.ndarray.sum(chull), chull
-    except:
-        return 1, np.array([1])

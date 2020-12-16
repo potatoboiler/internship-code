@@ -1,47 +1,31 @@
-import csv
 import os
+from tkinter import filedialog as tkfd
 
-import cv2 as cv
-import numpy as np
+from PIL import Image
 
-import convexity as conv
-from convexcropper import ConvexCropper
-from croppertk import Cropper
+from bw import BW
+from crop import ConvexCropper
+from retouch import Retouch
 
-imgexts = ['jpg', 'tif', 'png', 'bmp']
+file = tkfd.askopenfile(mode='rb', filetypes=[
+    ('Image Files', '.jpg .JPG .jpeg .JPEG .png .PNG .tif .TIF .tiff .TIFF'),
+    ('TIFF Image Files', '.tif .TIF .tiff .TIFF')
+])
+image = Image.open(file)
+photoimage = image.copy()
+filename = file.name
+extension = os.path.splitext(filename)[1]
+# print(extension)
 
-# creates UI object from which file is selected and crops are perfroemd
-root = ConvexCropper()
+root = BW(image=image, filename=filename)
 root.mainloop()
+root.destroy()
 
-# directory where output images are stored
-crops = os.listdir(root.newdir)
+image = Image.open('temp' + extension)
+root = Retouch(image=image, filename=filename)
+root.mainloop()
+root.destroy()
 
-# get name of csv file to be generated
-csvname = root.og_filename + '_conv.csv'
-
-with open(csvname, 'w', newline='') as csvfile:
-    w2csv = csv.writer(csvfile, delimiter=',',
-                       quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    w2csv.writerow(['filename', 'convexity', 'aggregate area', 'convex area'])
-
-    for file in crops:
-        if any(file.endswith(x) for x in imgexts):
-            # read image from dir
-            img = cv.imread(os.path.join(root.newdir, file), 0)
-
-            # thresh = nd array of binary image, ret is not used
-            ret, thresh = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
-
-            # write binarized image to disk
-            f, e = os.path.splitext(str(file))
-            filename = f + '_bin' + e
-            filepath = os.path.join(root.newdir, filename)
-            cv.imwrite(filepath, thresh)
-
-            # write stats to csv
-            agg_area = conv.ptCount(thresh)  # aggregate area
-            print("projected area: ", agg_area)
-            conv_area = conv.convMATLAB(thresh)  # convex hull area
-            print("convex area: ", conv_area)
-            w2csv.writerow([filename, agg_area/conv_area, agg_area, conv_area])
+image = Image.open('temp' + extension)
+root = ConvexCropper(image=image, filename=filename)
+root.mainloop()

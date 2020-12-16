@@ -243,10 +243,9 @@ class Cropper(tk.Tk):
     def start_cropping(self):
         cropcount = 0
 
-        self.og_filename = os.path.splitext(self.filename.split(
-            '/')[-1])[0]  # this is the name of the file itself
+        self.og_filename = os.path.splitext(self.filename.split('/')[-1])[0]
         self.newdir = os.path.join(
-            os.getcwd() + os.sep + 'output' + os.sep + 'crops_' + self.og_filename + os.sep)
+            os.getcwd() + os.sep + 'crops_' + self.og_filename + os.sep)
         try:
             os.makedirs(self.newdir)
         except:
@@ -290,7 +289,7 @@ class Cropper(tk.Tk):
 
         self.image_thumb_rect = Rect(self.image_thumb.size)
 
-        self.photoimage = ImageTk.PhotoImage(self.image_thumb,master=self)
+        self.photoimage = ImageTk.PhotoImage(self.image_thumb)
         w, h = self.image_thumb.size
         self.canvas.configure(
             width=(w + 2 * thumboffset),
