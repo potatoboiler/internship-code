@@ -115,13 +115,20 @@ class ConvexCropper(Cropper):
         self.image.save(os.path.join(
             self.newdir + os.sep + 'convex_' + self.og_filename + self.extension))
 
-        self.output()
+        self.output()  # writes all the images and computes data and stuff
         try:
             os.remove('temp' + self.extension)
         except:
             print('lol')
 
         # Once computation is done, prints this affirmative dialog box
+        exitmsg = tk.Tk()
+        exitmsg.grid()
+
+        exitlabel = tk.Label(
+            master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
+        exitlabel.grid()
+
     # Overrides utilButtons() from cropper-tk
     def utilButtons(self):
         super().utilButtons()
