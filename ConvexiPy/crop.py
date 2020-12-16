@@ -42,11 +42,6 @@ class ConvexCropper(Cropper):
         self.croprect_start = None
         self.croprect_end = None
 
-        # will be used to store values for cropped region properties, but is not currently implemented
-        # consolidating everything into these variables will stop double computation, but I have not gone through this yet
-        # stores variables as list {key: (image, (coordinates), (aggregate area, convex area, convexity))}
-        self.cropped_bits = []
-
         # various rectangles
         self.canvas_rects = []  # drawn rects on image
         self.crop_rects = []  # crop areas
@@ -153,90 +148,70 @@ class ConvexCropper(Cropper):
         # template string for creating files with the filename of the original image
         self.writedir = os.path.join(self.newdir + self.og_filename)
 
-        for croparea in self.crop_rects:
-            cropcount += 1
-            f = self.newfilename(cropcount)
-            # print(f, croparea)
-            self.crop(croparea, f)
-
-        # write image
-        self.image.save(os.path.join(
-            self.newdir + os.sep + 'convex_' + self.og_filename + self.extension))
-
-        self.output()  # writes all the images and computes data and stuff
-        try:
-            os.remove('temp' + self.extension)
-        except:
-            print('lol')
-
-        # Once computation is done, prints this affirmative dialog box
-        exitmsg = tk.Tk()
-        exitmsg.grid()
-
-        exitlabel = tk.Label(
-            master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
-        exitlabel.grid()
-
-    def crop(self, croparea, filename):
-        ''' Given a region of the original image and a filename, generates image crop from original '''
-        # save crop
-        ca = (croparea.left, croparea.top, croparea.right, croparea.bottom)
-        newimg = self.image.crop(ca)
-        newimg.save(filename)
-
-        # binarizes image yet again, but this step is only necessary if this tool is run standalone
-        ret, thresh = cv.threshold(
-            cv.imread(filename, 0), 127, 255, cv.THRESH_BINARY)
-
-        # need to write to a dictionary attached to self with { key: filename } as pairs
-        # computes convexity and writes it onto original image
-        convexity = conv.ptCount(thresh) / conv.convPython(thresh)[0]
-
-        self.draw.text((croparea.left, croparea.top),
-                       text=str(round(convexity, ndigits=4)),
-                       fill=(255, 255, 255),
-                       font=font)
-
-    def output(self):
-        ''' Given all the crop regions, computes all data and generates appropriate cropped images and outputs data to csv file. '''
-        # creates UI object from which file is selected and crops are perfroemd
-        # move images to memory, then process them there and save after
-
         # directory where output images are stored
         crops = os.listdir(self.newdir)
 
         # get name of csv file to be generated
         csvname = self.newdir + self.og_filename + '_conv.csv'
-
         with open(csvname, 'w', newline='') as csvfile:
             w2csv = csv.writer(csvfile, delimiter=',',
                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
             w2csv.writerow(
                 ['filename', 'convexity', 'aggregate area', 'convex area'])
 
-            for file in crops:
-                if any(s in file for s in ["_bin.", ".csv", "convex-"]):
-                    continue
-                # read image from dir
-                img = cv.imread(os.path.join(self.newdir, file), 0)
+            print(self.filename)
+            for croparea in self.crop_rects:
+                cropcount += 1
+                f = self.newfilename(cropcount)
+                print(f)
 
-                # thresh = numpy array of binary image, ret is not used
-                ret, thresh = cv.threshold(img, 127, 255, cv.THRESH_BINARY)
+                # save crop
+                ca = (croparea.left, croparea.top,
+                      croparea.right, croparea.bottom)
+                newimg = self.image.crop(ca)
+                newimg.save(f)
 
-                # write binarized image to disk
-                f, e = os.path.splitext(str(file))
-                filename = f + '_bin' + e
+                # binarizes image yet again, but this step is only necessary if this tool is run standalone
+                ret, thresh = cv.threshold(
+                    cv.imread(f, 0), 127, 255, cv.THRESH_BINARY)
+
+                filename = f + '_bin' + self.extension
                 filepath = os.path.join(self.newdir, filename)
                 if __name__ == '__main__':
                     cv.imwrite(filepath, thresh)
 
                 # write stats to csv
                 agg_area = conv.ptCount(thresh)  # aggregate area
-                print("projected area: ", agg_area)
                 conv_area = conv.convPython(thresh)[0]  # convex hull area
-                print("convex area: ", conv_area)
+                convexity = agg_area / conv_area
+
+                #print("projected area: ", agg_area)
+                #print("convex area: ", conv_area)
+
+                # Write a row of data to the csv file
                 w2csv.writerow(
                     [filename, agg_area/conv_area, agg_area, conv_area])
+
+                # writes convexity onto original image
+                self.draw.text(
+                    (croparea.left, croparea.top),
+                    text=str(round(convexity, ndigits=4)),
+                    fill=(255, 255, 255),
+                    font=font
+                )
+
+        # write image
+        self.image.save(os.path.join(
+            self.newdir + os.sep + 'convex_' + self.og_filename + self.extension))
+
+        # Remove temporary storage file
+        try:
+            os.remove('temp' + self.extension)
+        except:
+            print('lol')
+
+        # Once computation is done, prints this affirmative dialog box
+        self.displayExitMsg()
 
 
 if __name__ == '__main__':
