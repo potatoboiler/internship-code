@@ -120,6 +120,14 @@ class ConvexCropper(Cropper):
         self.redraw_rect()
         self.set_button_state()
 
+    def displayExitMsg(self):
+        exitmsg = tk.Tk()
+        exitmsg.grid()
+
+        exitlabel = tk.Label(
+            master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
+        exitlabel.grid()
+
     def start_cropping(self):
         ''' Begins the cropping purpose'''
         cropcount = 0
