@@ -2,16 +2,6 @@ import numpy as np
 from PIL import Image
 from skimage.morphology import convex_hull_image
 
-disableMATLABcomponents = False
-
-try:
-    import matlab
-    import matlab.engine
-    eng = matlab.engine.start_matlab()
-except:
-    print('no matlab installation present')
-    disableMATLABcomponents = True
-
 
 def load_image(infilename) -> np.ndarray:
     """
@@ -47,19 +37,11 @@ def ptCount(p: np.ndarray) -> int:
     return area
 
 
-def convMATLAB(binimg: np.ndarray):
-    """
-    Calls MATLAB script to compute the convex hull and area
-    Argument of computeconvex is numpy matrix of pixels converted to a MATLAB array
-    """
-    return eng.computeconvex(matlab.uint16(np.ndarray.tolist(binimg)))
-
-
 def convPython(binimg: np.ndarray):
     """
-    Python equivalent of convMATLAB(), returns area and convhull as bool np.ndarray
+    Python equivalent of convMATLAB() from previous versions of this tool, returns area and convhull as bool np.ndarray
     """
-    try: 
+    try:
         from skimage.morphology import convex_hull_image
         chull = convex_hull_image(binimg)
         return np.ndarray.sum(chull), chull
