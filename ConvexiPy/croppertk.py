@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
 photo_spliter.py - Provides a simple method to split a single image containing
@@ -309,6 +309,7 @@ class Cropper(tk.Tk):
         self.set_button_state()
 
     def newfilename(self, filenum):
+        ''' Given a file number and knowing the self.filename, returns a filename similar to /path/to/dir/.../filename__crop__filenum.e '''
         # print(self.filename)
         e = os.path.splitext(self.filename)[1]
         return '%s__crop__%s%s' % (self.writedir, filenum, e)

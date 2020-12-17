@@ -168,6 +168,7 @@ class ConvexCropper(Cropper):
                 ['filename', 'convexity', 'aggregate area', 'convex area'])
 
             print(self.filename)
+
             for croparea in self.crop_rects:
                 cropcount += 1
                 f = self.newfilename(cropcount)

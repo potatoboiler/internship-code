@@ -18,7 +18,7 @@ frameoffset = 10
 
 
 class BW(tk.Tk):
-
+    
     def __init__(self, master=None, image=None, filename=None):
         ''' Initializes window '''
         tk.Tk.__init__(self, master)
