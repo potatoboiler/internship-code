@@ -21,6 +21,7 @@ class Retouch(tk.Tk):
         tk.Tk.__init__(self, master)
         self.grid()
         self.initCanvas() 
+        self.ext_pi = None
 
 
         # holds separate menu frames
@@ -43,7 +44,6 @@ class Retouch(tk.Tk):
         
         # to be honest, image and photoimage parameters are kind of redundant and can probably just be refactored to be the same thing. 
         # photoimage basically allows passing of image from previous window. This is not implemented yet, but this should ideally allow for the original, non-binarized image as well as the binarized image to both be passed at the same time.
-        self.ext_pi = None
         if photoimage is not None:
             self.ext_pi = photoimage.copy()
         else:
