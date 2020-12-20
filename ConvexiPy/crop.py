@@ -162,17 +162,22 @@ class ConvexCropper(Cropper):
         # get name of csv file to be generated
         csvname = self.newdir + self.og_filename + '_conv.csv'
         with open(csvname, 'w', newline='') as csvfile:
-            w2csv = csv.writer(csvfile, delimiter=',',
-                               quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            w2csv = csv.writer(
+                csvfile,
+                delimiter=',',
+                quotechar='|',
+                quoting=csv.QUOTE_MINIMAL
+            )
             w2csv.writerow(
-                ['filename', 'convexity', 'aggregate area', 'convex area'])
+                ['filename', 'convexity', 'aggregate area', 'convex area']
+            )
 
-            print(self.filename)
+            # print(self.filename) #debug statement
 
             for croparea in self.crop_rects:
                 cropcount += 1
                 f = self.newfilename(cropcount)
-                print(f)
+                # print(f)
 
                 # save crop
                 ca = (croparea.left, croparea.top,
@@ -180,10 +185,12 @@ class ConvexCropper(Cropper):
                 newimg = self.image.crop(ca)
                 newimg.save(f)
 
-                # binarizes image yet again, but this step is only necessary if this tool is run standalone
+                # creates binarizes image from crop region
                 ret, thresh = cv.threshold(
-                    cv.imread(f, 0), 127, 255, cv.THRESH_BINARY)
+                    cv.imread(f, 0), 127, 255, cv.THRESH_BINARY
+                )
 
+                # save generated binarized image to disk 
                 filename = f + '_bin' + self.extension
                 filepath = os.path.join(self.newdir, filename)
                 if __name__ == '__main__':
