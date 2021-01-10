@@ -6,11 +6,17 @@ https://github.com/ImageProcessing-ElectronicPublications/python-cropper-tk
 If you try cropping an image of the same filename as one you've already cropped, that will results in undefined behavior and potentially exponential duplication of image files. Please try to delete previous files if you need to re-crop something.
 
 The 'Zooming' frame doesn't have any functionality for this tool, and can be overriden.
+
+BUG: Overlapping crop regions may lead to wrong convexity values. This is because the program may write text into that crop region before it is processed by the loop. Because the text is also white, the program will detect the text as part of the shape you wish to analyze.
+Workaround: DO NOT overlap crop regions.
+Fix idea: load all crop regions into memory prior to processing
 """
+import math
 import csv
+import itertools
 import os
-import tkinter as tk
 import platform
+import tkinter as tk
 
 import cv2 as cv
 import numpy as np
@@ -157,6 +163,7 @@ class ConvexCropper(Cropper):
         self.writedir = os.path.join(self.newdir + self.og_filename)
 
         # directory where output images are stored
+        # probably can be removed, IDE gives warning about how this is not used
         crops = os.listdir(self.newdir)
 
         # get name of csv file to be generated
@@ -168,9 +175,7 @@ class ConvexCropper(Cropper):
                 quotechar='|',
                 quoting=csv.QUOTE_MINIMAL
             )
-            w2csv.writerow(
-                ['filename', 'convexity', 'aggregate area', 'convex area']
-            )
+            w2csv.writerow(['filename', 'convexity', 'roundness', 'aggregate area', 'convex area'])
 
             # print(self.filename) #debug statement
 
@@ -180,38 +185,55 @@ class ConvexCropper(Cropper):
                 # print(f)
 
                 # save crop
-                ca = (croparea.left, croparea.top,
-                      croparea.right, croparea.bottom)
+                ca = (croparea.left, croparea.top, croparea.right, croparea.bottom)
                 newimg = self.image.crop(ca)
                 newimg.save(f)
 
                 # creates binarizes image from crop region
-                ret, thresh = cv.threshold(
-                    cv.imread(f, 0), 127, 255, cv.THRESH_BINARY
-                )
+                ret, thresh = cv.threshold(cv.imread(f, 0), 127, 255, cv.THRESH_BINARY)
 
-                # save generated binarized image to disk 
+                # save generated binarized image to disk
                 filename = f + '_bin' + self.extension
                 filepath = os.path.join(self.newdir, filename)
                 if __name__ == '__main__':
                     cv.imwrite(filepath, thresh)
 
-                # write stats to csv
                 agg_area = conv.ptCount(thresh)  # aggregate area
                 conv_area = conv.convPython(thresh)[0]  # convex hull area
                 convexity = agg_area / conv_area
+                # print("projected area: ", agg_area)
+                # print("convex area: ", conv_area)
 
-                #print("projected area: ", agg_area)
-                #print("convex area: ", conv_area)
+                # Find contours of particle in region
+                # Note: cv.findContours manages to separate one large contour into many, for some reason
+                contours, hierarchy = cv.findContours(thresh, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
 
+                full_contour = np.concatenate(contours)
+                convex_hull_vertices = cv.convexHull(points=full_contour).reshape(-1, 2)
+
+                # Find maximum Feret diameter
+                max_dist = 0
+                max_pair = None  # use max_dist to draw the axis, not implemented here
+                for pair in itertools.product(convex_hull_vertices, repeat=2):
+                    dist = np.linalg.norm(pair[0]-pair[1])
+                    if dist > max_dist:
+                        max_dist = dist
+                        max_pair = pair
+
+                # L = maximum Feret diameter of particle
+                # Roundness defined as ratio of area of projected particle to circle with diameter L
+                # Definition taken from China et al. 2015, "Morphology of diesel soot residuals from supercooled water droplets and ice crystals: implications for optical properties"
+                roundness = agg_area / (math.pi * (max_dist/2)**2)
+
+                # Write stats to csv
                 # Write a row of data to the csv file
-                w2csv.writerow(
-                    [filename, agg_area/conv_area, agg_area, conv_area])
+                w2csv.writerow([filename, convexity, roundness, agg_area, conv_area])
 
                 # writes convexity onto original image
+                stats_string = 'Convexity: ' + str(round(convexity, ndigits=4)) + '\nRoundness: ' + str(round(roundness, ndigits=4))
                 self.draw.text(
                     (croparea.left, croparea.top),
-                    text=str(round(convexity, ndigits=4)),
+                    text=stats_string,
                     fill=(255, 255, 255),
                     font=font
                 )
