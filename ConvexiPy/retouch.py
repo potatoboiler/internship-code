@@ -20,9 +20,8 @@ class Retouch(tk.Tk):
     def __init__(self, master=None, image=None, filename=None, photoimage=None):
         tk.Tk.__init__(self, master)
         self.grid()
-        self.initCanvas() 
+        self.initCanvas()
         self.ext_pi = None
-
 
         # holds separate menu frames
         self._frame = tk.Frame(master=self)
@@ -41,8 +40,8 @@ class Retouch(tk.Tk):
             self.image = image
             self.filename = filename
         self.loadimage()
-        
-        # to be honest, image and photoimage parameters are kind of redundant and can probably just be refactored to be the same thing. 
+
+        # to be honest, image and photoimage parameters are kind of redundant and can probably just be refactored to be the same thing.
         # photoimage basically allows passing of image from previous window. This is not implemented yet, but this should ideally allow for the original, non-binarized image as well as the binarized image to both be passed at the same time.
         if photoimage is not None:
             self.ext_pi = photoimage.copy()
@@ -81,6 +80,7 @@ class Retouch(tk.Tk):
 
         self.drawingcanvas.bind('<Button-1>', self.drawingcanvas_m1cb)
         self.drawingcanvas.bind('<B1-Motion>', self.drawingcanvas_paint)
+        self.drawingcanvas.bind('<Button-3>', self.floodfill_paint)
 
         # contains canvas image object for edited img
         self.editedCanvas = None
@@ -127,9 +127,29 @@ class Retouch(tk.Tk):
 
         # updates the displayed image on the canvas
         self.update_editedTk()
-        self.drawingcanvas.itemconfig(
-            self.editedCanvas, image=self.edited_imgTk)
+        self.drawingcanvas.itemconfig(self.editedCanvas, image=self.edited_imgTk)
         #print(event.x, event.y)
+
+    def floodfill_paint(self, event):
+        ''' 
+        Works like paint bucket tool in other drawing tools.
+        '''
+        xy = (event.x*self.scale[0], event.y*self.scale[1])
+        self.undo_cache.append(self.edited_img.copy())
+
+        # based on self.color, get the color to flood with
+        fill_color = None
+        if self.color == 'white':
+            fill_color = (255, 255, 255)
+        else:
+            fill_color = (0, 0, 0)
+
+        # floods the region with fill_color
+        ImageDraw.floodfill(self.edited_img, xy, fill_color)
+
+        # update the displayed image
+        self.update_editedTk()
+        self.drawingcanvas.itemconfig(self.editedCanvas, image=self.edited_imgTk)
 
     def update_editedTk(self):
         ''' Updates the canvas to display the current version of edited_img. '''
@@ -272,7 +292,7 @@ class Retouch(tk.Tk):
         ''' Creates a copy of the loaded image, and crops the copy, to display onto the canvas. The original image is preserved. The size parameters thumbsize may be changed through the thumbsize tuple at the top of the file. '''
         # size of original image
         self.rr = (self.region_rect.left, self.region_rect.top,
-                   self.region_rect.right, self.region_rect.bottom)       
+                   self.region_rect.right, self.region_rect.bottom)
         if self.ext_pi is not None:
             self.image_thumb = self.ext_pi.crop(self.rr)
         else:
