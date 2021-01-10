@@ -1,6 +1,5 @@
 opencv-python
 pathlib
-#replace PIL with Pillow please
 Pillow
 scipy
 numpy
