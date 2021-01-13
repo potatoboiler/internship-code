@@ -10,6 +10,10 @@ The 'Zooming' frame doesn't have any functionality for this tool, and can be ove
 BUG: Overlapping crop regions may lead to wrong convexity values. This is because the program may write text into that crop region before it is processed by the loop. Because the text is also white, the program will detect the text as part of the shape you wish to analyze.
 Workaround: DO NOT overlap crop regions.
 Fix idea: load all crop regions into memory prior to processing
+
+Potential idea: Automate cropping
+https://www.geeksforgeeks.org/detect-an-object-with-opencv-python/
+https://stackoverflow.com/questions/49969550/extract-detected-objects-and-save-to-different-images-opencv-python
 """
 import math
 import csv
@@ -26,10 +30,11 @@ import convexity as conv
 from croppertk import Cropper
 from rect import Rect
 
+# Select Arial font for output image, based on OS
 font = None
-if platform.system() == 'Darwin':
+if platform.system() == 'Darwin':  # MacOS
     font = ImageFont.truetype("/Library/Fonts/Arial Unicode.ttf", size=26)
-else:
+else:  # Windows
     font = ImageFont.truetype("arial.ttf", size=26)
 thumbsize = 896, 608
 thumboffset = 16
@@ -126,14 +131,6 @@ class ConvexCropper(Cropper):
         self.redraw_rect()
         self.set_button_state()
 
-    def displayExitMsg(self):
-        exitmsg = tk.Tk()
-        exitmsg.grid()
-
-        exitlabel = tk.Label(
-            master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
-        exitlabel.grid()
-
     def start_cropping(self):
         ''' Begins the cropping purpose'''
         cropcount = 0
@@ -175,7 +172,7 @@ class ConvexCropper(Cropper):
                 quotechar='|',
                 quoting=csv.QUOTE_MINIMAL
             )
-            w2csv.writerow(['filename', 'convexity', 'roundness', 'aggregate area', 'convex area'])
+            w2csv.writerow(['filename', 'convexity', 'roundness', 'aggregate area', 'convex area'])  # column headers
 
             # print(self.filename) #debug statement
 
@@ -213,7 +210,7 @@ class ConvexCropper(Cropper):
 
                 # Find maximum Feret diameter
                 max_dist = 0
-                max_pair = None  # use max_dist to draw the axis, not implemented here
+                max_pair = None  # use max_pair to draw the axis of maximum diameter, not implemented here
                 for pair in itertools.product(convex_hull_vertices, repeat=2):
                     dist = np.linalg.norm(pair[0]-pair[1])
                     if dist > max_dist:
@@ -246,10 +243,13 @@ class ConvexCropper(Cropper):
         try:
             os.remove('temp' + self.extension)
         except:
-            print('lol')
+            print('Temp file could not be removed! Has it already been deleted?')
 
         # Once computation is done, prints this affirmative dialog box
-        self.displayExitMsg()
+        exitmsg = tk.Tk()
+        exitmsg.grid()
+        exitlabel = tk.Label(master=exitmsg, text="Done! You may exit now", padx=50, pady=50)
+        exitlabel.grid()
 
 
 if __name__ == '__main__':
