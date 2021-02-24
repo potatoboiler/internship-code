@@ -13,5 +13,8 @@ tkinterplay.py
 test.py
 *.pyc
 *.tiff
-*cropbase.py
 *todo.md
+testing/*
+*Gor*
+*Granulometric*
+*.h5
